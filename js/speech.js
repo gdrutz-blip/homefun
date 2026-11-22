@@ -29,13 +29,13 @@ function voiceFor(lang) {
 }
 
 // Emoji get read out as their names ("ice cream emoji") — strip them.
-function clean(text) {
+function clean(text, lang = 'en') {
   return String(text)
     .replace(/<[^>]*>/g, ' ')
     .replace(/\p{Extended_Pictographic}/gu, '')
     .replace(/[\u{1F1E6}-\u{1F1FF}️‍]/gu, '')
-    .replace(/−/g, ' minus ')
-    .replace(/×/g, ' times ')
+    .replace(/−/g, lang.startsWith('fr') ? ' moins ' : ' minus ')
+    .replace(/×/g, lang.startsWith('fr') ? ' fois ' : ' times ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -45,7 +45,7 @@ export const speech = {
 
   say(text, lang = 'en-CA') {
     if (!synth || !text) return;
-    const words = clean(text);
+    const words = clean(text, lang);
     if (!words) return;
     const wasBusy = synth.speaking || synth.pending;
     synth.cancel();

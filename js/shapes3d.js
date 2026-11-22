@@ -2,32 +2,32 @@
 
 export const SHAPES3D = {
   cube: {
-    name: 'cube', faces: 6, edges: 12, vertices: 8, rolls: false, stacks: true, faceShape: 'square',
-    things: [{ e: '🎲', name: 'a dice' }, { e: '🧊', name: 'an ice cube' }],
+    name: 'cube', fr: 'cube', g: 'm', faces: 6, edges: 12, vertices: 8, rolls: false, stacks: true, faceShape: 'square',
+    things: [{ e: '🎲', name: 'a dice', fr: 'un dé' }, { e: '🧊', name: 'an ice cube', fr: 'un glaçon' }],
   },
   prism: {
-    name: 'rectangular prism', faces: 6, edges: 12, vertices: 8, rolls: false, stacks: true, faceShape: 'rectangle',
-    things: [{ e: '📦', name: 'a box' }, { e: '🧱', name: 'a brick' }, { e: '🍫', name: 'a chocolate bar' }],
+    name: 'rectangular prism', fr: 'prisme rectangulaire', g: 'm', faces: 6, edges: 12, vertices: 8, rolls: false, stacks: true, faceShape: 'rectangle',
+    things: [{ e: '📦', name: 'a box', fr: 'une boîte' }, { e: '🧱', name: 'a brick', fr: 'une brique' }, { e: '🍫', name: 'a chocolate bar', fr: 'une tablette de chocolat' }],
   },
   sphere: {
-    name: 'sphere', faces: 0, edges: 0, vertices: 0, rolls: true, stacks: false, faceShape: null,
-    things: [{ e: '⚽', name: 'a soccer ball' }, { e: '🏀', name: 'a basketball' }, { e: '🍊', name: 'an orange' }, { e: '🌍', name: 'the Earth' }],
+    name: 'sphere', fr: 'sphère', g: 'f', faces: 0, edges: 0, vertices: 0, rolls: true, stacks: false, faceShape: null,
+    things: [{ e: '⚽', name: 'a soccer ball', fr: 'un ballon de soccer' }, { e: '🏀', name: 'a basketball', fr: 'un ballon de basket' }, { e: '🍊', name: 'an orange', fr: 'une orange' }, { e: '🌍', name: 'the Earth', fr: 'la Terre' }],
   },
   cylinder: {
-    name: 'cylinder', faces: 2, edges: null, vertices: 0, rolls: true, stacks: true, faceShape: 'circle',
-    things: [{ e: '🥫', name: 'a soup can' }, { e: '🥁', name: 'a drum' }, { e: '🧻', name: 'a paper roll' }],
+    name: 'cylinder', fr: 'cylindre', g: 'm', faces: 2, edges: null, vertices: 0, rolls: true, stacks: true, faceShape: 'circle',
+    things: [{ e: '🥫', name: 'a soup can', fr: 'une boîte de soupe' }, { e: '🥁', name: 'a drum', fr: 'un tambour' }, { e: '🧻', name: 'a paper roll', fr: 'un rouleau d’essuie-tout' }],
   },
   cone: {
-    name: 'cone', faces: 1, edges: null, vertices: 1, rolls: true, stacks: false, faceShape: 'circle',
-    things: [{ e: '🍦', name: 'an ice cream cone' }],
+    name: 'cone', fr: 'cône', g: 'm', faces: 1, edges: null, vertices: 1, rolls: true, stacks: false, faceShape: 'circle',
+    things: [{ e: '🍦', name: 'an ice cream cone', fr: 'un cornet de crème glacée' }],
   },
   pyramid: {
-    name: 'pyramid', faces: 5, edges: 8, vertices: 5, rolls: false, stacks: false, faceShape: null,
+    name: 'pyramid', fr: 'pyramide', g: 'f', faces: 5, edges: 8, vertices: 5, rolls: false, stacks: false, faceShape: null,
     things: [],
   },
   triprism: {
-    name: 'triangular prism', faces: 5, edges: 9, vertices: 6, rolls: false, stacks: true, faceShape: null,
-    things: [{ e: '⛺', name: 'a tent' }, { e: '🧀', name: 'a wedge of cheese' }],
+    name: 'triangular prism', fr: 'prisme triangulaire', g: 'm', faces: 5, edges: 9, vertices: 6, rolls: false, stacks: true, faceShape: null,
+    things: [{ e: '⛺', name: 'a tent', fr: 'une tente' }, { e: '🧀', name: 'a wedge of cheese', fr: 'un morceau de fromage' }],
   },
 };
 

@@ -1,4 +1,5 @@
 // Reusable pictures: counting groups, base-ten blocks, number sequences.
+import { L } from './i18n.js';
 
 export function emojiGroup(e, n, { crossed = 0 } = {}) {
   const cols = Math.max(1, Math.min(n, 5));
@@ -25,8 +26,8 @@ export function baseTen(n, { label = true } = {}) {
   const o = n % 10;
   const rods = '<span class="rod"></span>'.repeat(t);
   const cubes = '<span class="cube"></span>'.repeat(o);
-  const tensWord = t === 1 ? 'ten' : 'tens';
-  const onesWord = o === 1 ? 'one' : 'ones';
+  const tensWord = L(t === 1 ? 'ten' : 'tens', t > 1 ? 'dizaines' : 'dizaine');
+  const onesWord = L(o === 1 ? 'one' : 'ones', o > 1 ? 'unités' : 'unité');
   return `<div class="b10">
     <div class="b10-blocks">${rods}${o ? `<span class="cubes">${cubes}</span>` : ''}</div>
     ${label ? `<div class="b10-label"><b>${n}</b> = ${t} ${tensWord} + ${o} ${onesWord}</div>` : ''}

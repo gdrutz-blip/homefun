@@ -2,16 +2,16 @@
 import { rand } from './util.js';
 
 export const SHAPES2D = {
-  circle: { name: 'circle', sides: 0, vertices: 0 },
-  oval: { name: 'oval', sides: 0, vertices: 0 },
-  triangle: { name: 'triangle', sides: 3, vertices: 3 },
-  square: { name: 'square', sides: 4, vertices: 4 },
-  rectangle: { name: 'rectangle', sides: 4, vertices: 4 },
-  rhombus: { name: 'rhombus', sides: 4, vertices: 4 },
-  trapezoid: { name: 'trapezoid', sides: 4, vertices: 4 },
-  pentagon: { name: 'pentagon', sides: 5, vertices: 5 },
-  hexagon: { name: 'hexagon', sides: 6, vertices: 6 },
-  octagon: { name: 'octagon', sides: 8, vertices: 8 },
+  circle: { name: 'circle', fr: 'cercle', sides: 0, vertices: 0 },
+  oval: { name: 'oval', fr: 'ovale', sides: 0, vertices: 0 },
+  triangle: { name: 'triangle', fr: 'triangle', sides: 3, vertices: 3 },
+  square: { name: 'square', fr: 'carré', sides: 4, vertices: 4 },
+  rectangle: { name: 'rectangle', fr: 'rectangle', sides: 4, vertices: 4 },
+  rhombus: { name: 'rhombus', fr: 'losange', sides: 4, vertices: 4 },
+  trapezoid: { name: 'trapezoid', fr: 'trapèze', sides: 4, vertices: 4 },
+  pentagon: { name: 'pentagon', fr: 'pentagone', sides: 5, vertices: 5 },
+  hexagon: { name: 'hexagon', fr: 'hexagone', sides: 6, vertices: 6 },
+  octagon: { name: 'octagon', fr: 'octogone', sides: 8, vertices: 8 },
 };
 
 const FILLS = ['#ff6fa5', '#9b7bff', '#2bb5a0', '#ffb020', '#4f8cff', '#ff7a45'];

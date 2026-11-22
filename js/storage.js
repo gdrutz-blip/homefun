@@ -2,7 +2,7 @@
 const KEY = 'miaReview.v1';
 
 const DEFAULTS = () => ({
-  settings: { autoRead: true, sound: true, slow: false },
+  settings: { autoRead: true, sound: true, slow: false, lang: 'en' },
   progress: {},
   stickers: [],
 });

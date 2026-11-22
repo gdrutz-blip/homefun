@@ -7,9 +7,13 @@ import { levelById, nextLevel, prevLevel, peppers } from './levels.js';
 import { esc, pick, orList } from './util.js';
 import { awardStickers } from './stickers.js';
 import { FAMILY, ROUND_LENGTH } from './config.js';
+import { L, voiceLang } from './i18n.js';
 
-const PRAISE = ['Great job!', 'You got it!', 'Awesome!', 'Super!', 'Yes!', 'Fantastic!', 'Way to go!', 'Nailed it!'];
-const RETRY = ['Not quite. Try again!', 'Oops! Have another try.', 'Almost! Try again.', "Good try! Let's look again."];
+const PRAISE = () => L(['Great job!', 'You got it!', 'Awesome!', 'Super!', 'Yes!', 'Fantastic!', 'Way to go!', 'Nailed it!'],
+  ['Bravo!', 'Tu as trouvé!', 'Génial!', 'Super!', 'Oui!', 'Fantastique!', 'Excellent!', 'Bien joué!']);
+const RETRY = () => L(['Not quite. Try again!', 'Oops! Have another try.', 'Almost! Try again.', "Good try! Let's look again."],
+  ['Pas tout à fait. Essaie encore!', 'Oups! Essaie encore une fois.', 'Presque! Essaie encore.', 'Bel essai! Regardons encore.']);
+const say = (text, lang) => speech.say(text, lang || voiceLang());
 
 export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
   const lv = levelById(levelId);
@@ -62,7 +66,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
         ${q.badge ? `<div class="badge">${q.badge}</div>` : ''}
         <div class="prompt-row">
           <p class="prompt-text">${q.text}</p>
-          <button class="speak" data-act="say-q" aria-label="Read it to me">🔊</button>
+          <button class="speak" data-act="say-q" aria-label="${L('Read it to me', 'Lis-le-moi')}">🔊</button>
         </div>
         ${q.big ? `<div class="big-eq">${q.big}</div>` : ''}
       </section>
@@ -95,7 +99,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     if (!t || !game.contains(t)) return;
     const act = t.dataset.act;
     if (act === 'say-q') return speakQuestion();
-    if (act === 'say-hint') return speech.say(t.dataset.text);
+    if (act === 'say-hint') return say(t.dataset.text);
     if (act === 'quit') return confirmQuit();
     if (act === 'again') return onPlay(levelId);
     if (act === 'level') return onPlay(t.dataset.level);
@@ -110,8 +114,11 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
 
   function speakQuestion() {
     let text = q.say || q.text;
-    if (q.sayChoices && q.choices) text += ' Is it ' + orList(q.choices.map((c) => c.say || c.label)) + '?';
-    speech.say(text, q.lang);
+    if (q.sayChoices && q.choices) {
+      const words = q.choices.map((c) => c.say || c.label);
+      text += L(` Is it ${orList(words)}?`, ` Est-ce ${words.slice(0, -1).join(', ')} ou ${words[words.length - 1]}?`);
+    }
+    say(text, q.lang);
   }
 
   function showTyped() {
@@ -144,9 +151,9 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     results.push({ ok: tries === 0, text: q.plain });
     if (!tries) dots[idx].classList.add('done');
     else dots[idx].classList.add('helped');
-    const praise = pick([...PRAISE, ...(unit.praise || []), ...(unit.praise || [])]);
+    const praise = pick([...PRAISE(), ...(unit.praise || []), ...(unit.praise || [])]);
     showBanner(`${praise}`, 'good');
-    speech.say(praise.replace(/[!]/g, '!'));
+    say(praise);
     setTimeout(() => { if (alive()) { idx++; next(); } }, 1500);
   }
 
@@ -158,9 +165,9 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
 
     if (tries === 1) {
-      const retry = pick(RETRY);
+      const retry = pick(RETRY());
       showHint(retry);
-      speech.say(`${retry} ${q.hint?.say || q.hint?.text || ''}`, q.lang);
+      say(`${retry} ${q.hint?.say || q.hint?.text || ''}`, q.lang);
     } else {
       reveal();
     }
@@ -191,19 +198,21 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
       const box = stage.querySelector('.answers');
       box.innerHTML = `
         <div class="reveal-card pop-in">
-          <p>The answer is <b class="reveal-ans">${shown}</b>.</p>
-          <p class="small">That one was tricky. You'll get the next one!</p>
-          <button class="btn primary" data-act="next">Next ➜</button>
+          <p>${L('The answer is', 'La réponse est')} <b class="reveal-ans">${shown}</b>.</p>
+          <p class="small">${L("That one was tricky. You'll get the next one!", 'Celle-là était difficile. Tu vas réussir la prochaine!')}</p>
+          <button class="btn primary" data-act="next">${L('Next', 'Suivant')} ➜</button>
         </div>`;
-      speech.say(`The answer is ${q.revealSay || shown}. That one was tricky. You'll get the next one!`, q.lang);
+      say(L(`The answer is ${q.revealSay || shown}. That one was tricky. You'll get the next one!`,
+        `La réponse est ${q.revealSay || shown}. Celle-là était difficile. Tu vas réussir la prochaine!`), q.lang);
       return;
     }
     // choice: glow the right answer and let her tap it
     const right = [...stage.querySelectorAll('.choice')].find((b) => String(b.dataset.v) === String(q.answer));
     right?.classList.add('glow');
-    const msg = `Here it is! Tap the glowing answer.`;
+    const msg = L('Here it is! Tap the glowing answer.', 'La voici! Touche la réponse qui brille.');
     showHint(msg);
-    speech.say(`${msg} It's ${q.revealSay || (q.choiceStyle === 'visual' ? 'the glowing one' : shown)}.`, q.lang);
+    const it = q.revealSay || (q.choiceStyle === 'visual' ? L('the glowing one', 'celle qui brille') : shown);
+    say(`${msg} ${L(`It's ${it}.`, `C'est ${it}.`)}`, q.lang);
   }
 
   function showBanner(text, kind) {
@@ -219,10 +228,10 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     m.className = 'modal';
     m.innerHTML = `
       <div class="modal-card pop-in">
-        <p>Stop playing this round?</p>
+        <p>${L('Stop playing this round?', 'Arrêter cette partie?')}</p>
         <div class="modal-actions">
-          <button class="btn primary" data-m="stay">Keep playing</button>
-          <button class="btn" data-m="leave">Stop</button>
+          <button class="btn primary" data-m="stay">${L('Keep playing', 'Continuer à jouer')}</button>
+          <button class="btn" data-m="leave">${L('Stop', 'Arrêter')}</button>
         </div>
       </div>`;
     m.addEventListener('click', (e) => {
@@ -233,7 +242,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
       else m.remove();
     });
     game.appendChild(m);
-    speech.say('Stop playing this round?');
+    say(L('Stop playing this round?', 'Arrêter cette partie?'));
   }
 
   // ---------- end of round ----------
@@ -247,29 +256,32 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     const won = awardStickers(stars === 3 ? 2 : 1);
     const up = nextLevel(levelId);
     const down = prevLevel(levelId);
-    const title = pick(unit.doneTitles || ['Round complete!']);
+    const title = pick(unit.doneTitles || [L('Round complete!', 'Partie terminée!')]);
+    const lvName = (l) => L(l.name, l.fr);
 
     dots.forEach((d) => d.classList.remove('current'));
     stage.innerHTML = `
       <section class="end-card pop-in">
         <h2>${title}</h2>
         <div class="stars">${[1, 2, 3].map((i) => `<span class="star ${i <= stars ? 'on' : ''}" style="--d:${i * 0.25}s">★</span>`).join('')}</div>
-        <p class="end-score">${firstTry} out of ${ROUND_LENGTH} on the first try!</p>
+        <p class="end-score">${L(`${firstTry} out of ${ROUND_LENGTH} on the first try!`, `${firstTry} sur ${ROUND_LENGTH} du premier coup!`)}</p>
         ${won.length ? `
           <div class="new-stickers">
-            <p>${won.length > 1 ? 'New stickers!' : 'New sticker!'}</p>
+            <p>${won.length > 1 ? L('New stickers!', 'Nouveaux autocollants!') : L('New sticker!', 'Nouvel autocollant!')}</p>
             <div class="sticker-row">${won.map((s) => `<span class="sticker-big">${s.e}</span>`).join('')}</div>
           </div>` : ''}
         <div class="end-actions">
-          ${stars >= 2 && up ? `<button class="btn spicy" data-act="level" data-level="${up.id}">Try ${up.name} ${peppers(up.peppers)}</button>` : ''}
-          <button class="btn primary" data-act="again">Play again 🔁</button>
-          ${stars === 1 && down ? `<button class="btn" data-act="level" data-level="${down.id}">Try ${down.name} ${peppers(down.peppers)}</button>` : ''}
-          <button class="btn" data-act="menu">Pick another game</button>
+          ${stars >= 2 && up ? `<button class="btn spicy" data-act="level" data-level="${up.id}">${L('Try', 'Essaie')} ${lvName(up)} ${peppers(up.peppers)}</button>` : ''}
+          <button class="btn primary" data-act="again">${L('Play again', 'Rejouer')} 🔁</button>
+          ${stars === 1 && down ? `<button class="btn" data-act="level" data-level="${down.id}">${L('Try', 'Essaie')} ${lvName(down)} ${peppers(down.peppers)}</button>` : ''}
+          <button class="btn" data-act="menu">${L('Pick another game', 'Choisir un autre jeu')}</button>
         </div>
       </section>`;
     sound.win();
     confetti();
-    const stickerWords = won.length ? ` You got ${won.length > 1 ? 'new stickers' : 'a new sticker'}: ${won.map((s) => s.name).join(' and ')}!` : '';
-    speech.say(`${title.replace(/\p{Extended_Pictographic}/gu, '')} ${FAMILY.kid}, you earned ${stars} ${stars === 1 ? 'star' : 'stars'}!${stickerWords}`);
+    const stickerWords = won.length
+      ? L(` You got ${won.length > 1 ? 'new stickers' : 'a new sticker'}!`, ` Tu as gagné ${won.length > 1 ? 'de nouveaux autocollants' : 'un nouvel autocollant'}!`)
+      : '';
+    say(`${title} ${L(`${FAMILY.kid}, you earned ${stars} ${stars === 1 ? 'star' : 'stars'}!`, `${FAMILY.kid}, tu as gagné ${stars} ${stars === 1 ? 'étoile' : 'étoiles'}!`)}${stickerWords}`);
   }
 }

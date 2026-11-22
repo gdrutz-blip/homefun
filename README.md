@@ -13,6 +13,7 @@ Fun review games for an Ontario Grade 2 student (French Immersion). They're buil
 | 🤸‍♀️ Gymnastics Meet | 3D shapes | Name solids, real-world objects | Roll/stack, faces, face shapes | Edges, vertices, riddles |
 
 How it works:
+- **English / Français switch:** at the top of the Math screen (also in ⚙️ Settings). Every math game, hint, praise message and the read-aloud voice switches to French. Stars are shared between the two languages.
 - **Read-aloud:** the 🔊 button reads any question, hint or menu. Under ⚙️ Settings you can turn on automatic reading and a slower voice. It uses the phone's built-in voice, which works offline.
 - **Rounds:** each round has 8 questions. A wrong answer brings up a hint with a picture (base-ten blocks, crossed-out items, numbered corners). A second wrong answer shows her the right one. No timers.
 - **Rewards:** she earns 1–3 stars per round and stickers for her Sticker Book.
@@ -44,7 +45,7 @@ Edit `js/config.js`.
 
 1. Create a unit file such as `js/units/math/money.js`. Copy the shape of an existing one, like `adding.js`. A unit exports `id`, `title`, `skill`, `emoji`, `theme`, `color`, `blurb`, `intro`, `levels` (kid and parent descriptions) and a `makeQuestion(level, index)` function.
 2. Add it to `js/subjects.js`. For French, Science or Social Studies, put the units in that subject's `units` list and remove `comingSoon`.
-3. Questions are plain objects (documented in `js/units/common.js`). Set `lang: 'fr-CA'` on a question to have it read aloud in French.
+3. Questions are plain objects (documented in `js/units/common.js`). For text that should follow the English/French switch, write `L('English', 'Français')` (from `js/i18n.js`). The read-aloud voice follows the switch automatically.
 4. Add the new file to the `CORE` list in `sw.js` so it works offline.
 
 ## Files

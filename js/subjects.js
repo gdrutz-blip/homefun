@@ -7,7 +7,7 @@ import shapes3d from './units/math/shapes3d.js';
 
 export const SUBJECTS = [
   {
-    id: 'math', name: 'Math', emoji: '🔢', color: '#ff7a59',
+    id: 'math', name: 'Math', frName: 'Les maths', emoji: '🔢', color: '#ff7a59', bilingual: true,
     units: [adding, subtracting, skipcount, shapes2d, shapes3d],
   },
   { id: 'french', name: 'Français', emoji: '🥐', color: '#3d7bfd', comingSoon: true, units: [] },

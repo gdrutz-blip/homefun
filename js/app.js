@@ -7,24 +7,27 @@ import { runRound } from './engine.js';
 import { FAMILY } from './config.js';
 import { STICKERS } from './stickers.js';
 import { esc } from './util.js';
+import { L, isFr, voiceLang } from './i18n.js';
 
 const app = document.getElementById('app');
 const K = FAMILY.kid;
 
-const speakBtn = (text, cls = '') =>
-  `<button class="speak ${cls}" data-say="${esc(text)}" aria-label="Read it to me">🔊</button>`;
+const speakBtn = (text, cls = '', lang = 'en-CA') =>
+  `<button class="speak ${cls}" data-say="${esc(text)}" data-lang="${lang}" aria-label="Read it to me">🔊</button>`;
+/** Speak button for game content (follows the English/French switch). */
+const gameSpeak = (text, cls = '') => speakBtn(text, cls, voiceLang());
 
-const topBar = (back, title, sayText) => `
+const topBar = (back, title, sayText, lang) => `
   <header class="topbar">
     <button class="icon-btn" data-go="${back}" aria-label="Back">←</button>
     <h1 class="topbar-title">${title}</h1>
-    ${sayText ? speakBtn(sayText) : '<span class="icon-spacer"></span>'}
+    ${sayText ? speakBtn(sayText, '', lang) : '<span class="icon-spacer"></span>'}
   </header>`;
 
 const starRow = (n) => `<span class="mini-stars">${[1, 2, 3].map((i) => `<span class="${i <= n ? 'on' : ''}">★</span>`).join('')}</span>`;
 
 function setTheme(t) { document.body.dataset.theme = t || 'home'; }
-function autoSay(text) { if (store.settings().autoRead) setTimeout(() => speech.say(text), 200); }
+function autoSay(text, lang) { if (store.settings().autoRead) setTimeout(() => speech.say(text, lang), 200); }
 
 // One click handler for the whole app: 🔊 buttons and navigation.
 app.addEventListener('click', (e) => {
@@ -71,7 +74,12 @@ function subjectScreen(subjectId) {
   if (!sub || sub.comingSoon) return home();
   setTheme('home');
   app.innerHTML = `
-    ${topBar('#/', `${sub.emoji} ${sub.name}`, `${sub.name}! Pick a game.`)}
+    ${topBar('#/', `${sub.emoji} ${L(sub.name, sub.frName || sub.name)}`, L(`${sub.name}! Pick a game.`, 'Choisis un jeu!'), voiceLang())}
+    ${sub.bilingual ? `
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn ${isFr() ? '' : 'on'}" data-lang-set="en">English</button>
+        <button class="lang-btn ${isFr() ? 'on' : ''}" data-lang-set="fr">Français</button>
+      </div>` : ''}
     <section class="unit-list">
       ${sub.units.map((u) => `
         <div class="unit-card" style="--c:${u.color}" data-go="#/s/${sub.id}/${u.id}" role="button" tabindex="0">
@@ -83,9 +91,15 @@ function subjectScreen(subjectId) {
               ${LEVELS.map((l) => `<span class="ul">${peppers(l.peppers)}${starRow(store.progress(`${sub.id}.${u.id}.${l.id}`)?.best || 0)}</span>`).join('')}
             </span>
           </span>
-          ${speakBtn(`${u.title}. ${u.skill}. ${u.blurb}`, 'small')}
+          ${gameSpeak(`${u.title}. ${u.skill}. ${u.blurb}`, 'small')}
         </div>`).join('')}
     </section>`;
+  app.querySelectorAll('[data-lang-set]').forEach((b) => b.addEventListener('click', () => {
+    store.setSetting('lang', b.dataset.langSet);
+    sound.tap();
+    subjectScreen(subjectId);
+    speech.say(isFr() ? 'Les maths en français!' : 'Math in English!', voiceLang());
+  }));
 }
 
 function levelScreen(subjectId, unitId) {
@@ -93,26 +107,26 @@ function levelScreen(subjectId, unitId) {
   if (!unit) return home();
   setTheme(unit.theme);
   app.innerHTML = `
-    ${topBar(`#/s/${subjectId}`, unit.skill, unit.intro)}
+    ${topBar(`#/s/${subjectId}`, unit.skill, unit.intro, voiceLang())}
     <section class="intro-card pop-in">
       <div class="intro-emoji">${unit.emoji}</div>
       <h2>${unit.title}</h2>
       <p>${unit.intro}</p>
     </section>
-    <h3 class="pick-label">How spicy? ${speakBtn('How spicy do you want it? Mild, medium, or spicy?', 'small')}</h3>
+    <h3 class="pick-label">${L('How spicy?', 'Quel niveau?')} ${gameSpeak(L('How spicy do you want it? Mild, medium, or spicy?', 'Quel niveau veux-tu? Doux, moyen ou piquant?'), 'small')}</h3>
     <section class="level-list">
       ${LEVELS.map((l) => {
         const best = store.progress(`${subjectId}.${unit.id}.${l.id}`)?.best || 0;
         return `
         <div class="level-btn" style="--lc:${l.color}" data-go="#/play/${subjectId}/${unit.id}/${l.id}" role="button" tabindex="0">
           <span class="level-peppers">${peppers(l.peppers)}</span>
-          <span class="level-text"><b>${l.name}</b><span>${unit.levels[l.id].kid}</span></span>
+          <span class="level-text"><b>${L(l.name, l.fr)}</b><span>${unit.levels[l.id].kid}</span></span>
           ${starRow(best)}
-          ${speakBtn(`${l.name}. ${unit.levels[l.id].kid}.`, 'small')}
+          ${gameSpeak(`${L(l.name, l.fr)}. ${unit.levels[l.id].kid}.`, 'small')}
         </div>`;
       }).join('')}
     </section>`;
-  autoSay(unit.intro);
+  autoSay(unit.intro, voiceLang());
 }
 
 function play(subjectId, unitId, levelId) {
@@ -158,6 +172,11 @@ function settingsScreen() {
       ${toggle('autoRead', 'Read questions out loud by itself', '🗣️')}
       ${toggle('slow', 'Read slowly', '🐢')}
       ${toggle('sound', 'Sound effects', '🔔')}
+      <button class="setting ${isFr() ? 'on' : ''}" data-lang-toggle>
+        <span class="setting-emoji">🇫🇷</span>
+        <span class="setting-label">Math games in French</span>
+        <span class="switch"><span></span></span>
+      </button>
       <button class="btn primary wide" data-test-voice>🔊 Test the voice</button>
       ${speech.supported ? '' : '<p class="note">This browser can’t read out loud. Try Chrome.</p>'}
     </section>`;
@@ -167,8 +186,14 @@ function settingsScreen() {
     b.classList.toggle('on', store.settings()[k]);
     sound.tap();
   }));
-  app.querySelector('[data-test-voice]').addEventListener('click', () =>
-    speech.say(`Hi ${K}! I will read the questions to you. Tap the speaker any time to hear it again.`));
+  app.querySelector('[data-lang-toggle]').addEventListener('click', (e) => {
+    store.setSetting('lang', isFr() ? 'en' : 'fr');
+    e.currentTarget.classList.toggle('on', isFr());
+    sound.tap();
+  });
+  app.querySelector('[data-test-voice]').addEventListener('click', () => speech.say(isFr()
+    ? `Bonjour ${K}! Je vais te lire les questions. Touche le haut-parleur pour les entendre encore.`
+    : `Hi ${K}! I will read the questions to you. Tap the speaker any time to hear it again.`, voiceLang()));
 }
 
 // ---- grown-ups ----
