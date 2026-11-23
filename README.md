@@ -1,8 +1,28 @@
-# Mia's Grade 2 Review 🍦🎸🤸‍♀️🧙‍♀️
+# Family Review Games 🍦🎸🐶🍕
 
 Fun review games for an Ontario Grade 2 student (French Immersion). They're built for a phone (Pixel/Chrome) and run as a plain website with no build step, no accounts and no tracking.
 
-## What's in it
+## Players
+
+Opening the app asks **"Who's playing?"**. Each kid has her own stars, stickers, settings and look:
+
+- **Mia, Grade 2**: read-aloud on by default.
+- **Farrah, Grade 3**: read-aloud off by default (the 🔊 button is still there).
+
+Both can **tap any word** in a question or hint to hear just that word. This can be turned off in ⚙️ Settings.
+
+### Farrah's Grade 3 math
+
+| Game | Skill | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
+|---|---|---|---|---|
+| 🐶 Puppy Training School | Multiplication | Equal groups and arrays with pictures | Facts of 2, 5, 10 | Up to 7 × 7, missing factors |
+| 🪱 Cousin Snack Share | Division | Sharing with pictures | Sharing and grouping (2, 5, 10) | Facts up to 49 ÷ 7 |
+| 🍳 Breakfast Diner | Add & subtract to 1000 | Hundreds and tens | 3-digit, no regrouping | 3-digit with regrouping |
+| 🏭 Gummy Worm Factory | Numbers to 1000 | Hundreds/tens/ones | Compare, digit value | Skip count by 25/50/100, expanded form |
+| 🍕 Pizza Night at the Cottage | Fractions | Halves, thirds, fourths; equal parts | 3/4, 5/6…; match pictures | Compare unit fractions, pizza left over |
+| 🎢 Amusement Park Day | Money | Coins to $1 | Loonies, toonies, change from $1 | Change from $5/$10, enough money? |
+
+## Mia's games (Grade 2)
 
 | Game | Skill | 🌶️ Mild | 🌶️🌶️ Medium | 🌶️🌶️🌶️ Spicy |
 |---|---|---|---|---|

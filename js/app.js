@@ -1,16 +1,14 @@
-import { SUBJECTS, findSubject, findUnit } from './subjects.js';
+import { PROFILES, currentProfile, findSubject, findUnit, selectProfile, profileById } from './profiles.js';
 import { LEVELS, peppers } from './levels.js';
 import { store } from './storage.js';
 import { speech } from './speech.js';
 import { sound } from './sound.js';
 import { runRound } from './engine.js';
-import { FAMILY } from './config.js';
-import { STICKERS } from './stickers.js';
 import { esc } from './util.js';
 import { L, isFr, voiceLang, forceLang } from './i18n.js';
 
 const app = document.getElementById('app');
-const K = FAMILY.kid;
+const kidName = () => currentProfile().name;
 
 const speakBtn = (text, cls = '', lang = 'en-CA') =>
   `<button class="speak ${cls}" data-say="${esc(text)}" data-lang="${lang}" aria-label="Read it to me">🔊</button>`;
@@ -26,7 +24,10 @@ const topBar = (back, title, sayText, lang) => `
 
 const starRow = (n) => `<span class="mini-stars">${[1, 2, 3].map((i) => `<span class="${i <= n ? 'on' : ''}">★</span>`).join('')}</span>`;
 
-function setTheme(t) { document.body.dataset.theme = t || 'home'; }
+function setTheme(t) {
+  document.body.dataset.theme = t || 'home';
+  document.body.dataset.profile = currentProfile().look;
+}
 function autoSay(text, lang) { if (store.settings().autoRead) setTimeout(() => speech.say(text, lang), 200); }
 
 // One click handler for the whole app: 🔊 buttons and navigation.
@@ -39,11 +40,38 @@ app.addEventListener('click', (e) => {
 
 // ---------------- screens ----------------
 
+function whoScreen() {
+  forceLang(null);
+  document.body.dataset.theme = 'home';
+  document.body.dataset.profile = 'who';
+  app.innerHTML = `
+    <section class="hero pop-in">
+      <div class="hero-row"><h1>Who's playing?</h1>${speakBtn("Who's playing?")}</div>
+    </section>
+    <section class="who-grid">
+      ${PROFILES.map((p) => `
+        <button class="who-card" data-pick="${p.id}" style="--c:${p.color}">
+          <span class="who-avatar">${p.avatar}</span>
+          <span class="who-name">${p.name}</span>
+          <span class="who-grade">Grade ${p.grade}</span>
+        </button>`).join('')}
+    </section>`;
+  app.querySelectorAll('[data-pick]').forEach((b) => b.addEventListener('click', () => {
+    selectProfile(b.dataset.pick);
+    sound.tap();
+    if (location.hash && location.hash !== '#/') location.hash = '#/';
+    else home();
+  }));
+}
+
 function home() {
   setTheme('home');
   const d = store.data();
+  const prof = currentProfile();
+  const K = prof.name;
   app.innerHTML = `
     <section class="hero pop-in">
+      <button class="switch-player" data-go="#/who" aria-label="Switch player">${prof.avatar} <span>Switch</span></button>
       <div class="hero-row">
         <h1>Hi ${K}! 👋</h1>
         ${speakBtn(`Hi ${K}! What do you want to practice today?`)}
@@ -52,7 +80,7 @@ function home() {
       <button class="pill" data-go="#/stickers">⭐ ${store.totalStars()} stars &nbsp;·&nbsp; 📒 ${d.stickers.length} stickers</button>
     </section>
     <section class="subject-grid">
-      ${SUBJECTS.map((s) => s.comingSoon
+      ${prof.subjects.map((s) => s.comingSoon
         ? `<div class="subject-tile soon" style="--c:${s.color}">
              <span class="tile-emoji">${s.emoji}</span><span class="tile-name">${s.name}</span>
              <span class="soon-tag">Coming soon</span>
@@ -98,7 +126,7 @@ function subjectScreen(subjectId) {
     store.setSetting('lang', b.dataset.langSet);
     sound.tap();
     subjectScreen(subjectId);
-    speech.say(isFr() ? 'Les maths en français!' : 'Math in English!', voiceLang());
+    speech.say(isFr() ? 'En français!' : 'In English!', voiceLang());
   }));
 }
 
@@ -147,6 +175,7 @@ function play(subjectId, unitId, levelId) {
 function stickersScreen() {
   setTheme('home');
   const have = store.data().stickers.length;
+  const STICKERS = currentProfile().stickers;
   app.innerHTML = `
     ${topBar('#/', '📒 Sticker Book', `You have ${have} out of ${STICKERS.length} stickers! Finish a game to win more.`)}
     <p class="center sub">You have <b>${have}</b> of ${STICKERS.length} stickers!<br>Finish a game to win more.</p>
@@ -167,14 +196,15 @@ function settingsScreen() {
       <span class="switch"><span></span></span>
     </button>`;
   app.innerHTML = `
-    ${topBar('#/', '⚙️ Settings', 'Settings')}
+    ${topBar('#/', `⚙️ ${kidName()}'s Settings`, 'Settings')}
     <section class="settings">
       ${toggle('autoRead', 'Read questions out loud by itself', '🗣️')}
+      ${toggle('tapWords', 'Tap a word to hear it', '👆')}
       ${toggle('slow', 'Read slowly', '🐢')}
       ${toggle('sound', 'Sound effects', '🔔')}
       <button class="setting ${isFr() ? 'on' : ''}" data-lang-toggle>
         <span class="setting-emoji">🇫🇷</span>
-        <span class="setting-label">Math, Science &amp; Social Studies in French</span>
+        <span class="setting-label">Games in French (Math, Science, Social Studies)</span>
         <span class="switch"><span></span></span>
       </button>
       <button class="btn primary wide" data-test-voice>🔊 Test the voice</button>
@@ -191,6 +221,7 @@ function settingsScreen() {
     e.currentTarget.classList.toggle('on', isFr());
     sound.tap();
   });
+  const K = kidName();
   app.querySelector('[data-test-voice]').addEventListener('click', () => speech.say(isFr()
     ? `Bonjour ${K}! Je vais te lire les questions. Touche le haut-parleur pour les entendre encore.`
     : `Hi ${K}! I will read the questions to you. Tap the speaker any time to hear it again.`, voiceLang()));
@@ -215,42 +246,53 @@ function grownups() {
     return;
   }
   const fmtDate = (t) => (t ? new Date(t).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—');
+  const unitCard = (prof, sub, u) => {
+    const prog = (l) => store.profileData(prof.id).progress[`${sub.id}.${u.id}.${l.id}`];
+    const missed = LEVELS.flatMap((l) => (prog(l)?.missed || []).map((m) => `${peppers(l.peppers)} ${esc(m)}`));
+    return `
+      <div class="parent-unit">
+        <h3>${u.emoji} ${u.skill} <small>· ${u.title}</small></h3>
+        <table>
+          <thead><tr><th>Level</th><th>Best</th><th>Rounds</th><th>First try</th><th>Last</th></tr></thead>
+          <tbody>
+            ${LEVELS.map((l) => {
+              const p = prog(l);
+              return `<tr>
+                <td>${peppers(l.peppers)}</td>
+                <td>${p ? starRow(p.best) : '—'}</td>
+                <td>${p?.plays || 0}</td>
+                <td>${p?.total ? Math.round((100 * p.firstTry) / p.total) + '%' : '—'}</td>
+                <td>${fmtDate(p?.last)}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+        <details>
+          <summary>What each level covers</summary>
+          <ul>${LEVELS.map((l) => `<li><b>${l.name}:</b> ${u.levels[l.id].parent}</li>`).join('')}</ul>
+        </details>
+        ${missed.length ? `<details><summary>Recent tricky questions (${missed.length})</summary><ul class="missed">${missed.map((m) => `<li>${m}</li>`).join('')}</ul></details>` : ''}
+      </div>`;
+  };
+  // Show unit names in English here, whatever language the kids picked.
+  forceLang('en');
+  const html = PROFILES.map((prof) => `
+    <details class="parent-kid" ${prof.id === currentProfile().id ? 'open' : ''}>
+      <summary><span>${prof.avatar} ${prof.name}</span> <small>Grade ${prof.grade}</small></summary>
+      ${prof.subjects.filter((s) => !s.comingSoon).map((sub) => `<h4 class="parent-subject">${sub.emoji} ${sub.name}</h4>${sub.units.map((u) => unitCard(prof, sub, u)).join('')}`).join('')}
+      <button class="btn danger wide" data-reset="${prof.id}">Reset ${prof.name}'s progress &amp; stickers</button>
+    </details>`).join('');
+  forceLang(null);
   app.innerHTML = `
     ${topBar('#/', '📊 Grown-ups')}
     <section class="parent">
       <p class="note">Progress is saved on this device only. "First try" means right without a hint.</p>
-      ${SUBJECTS.filter((s) => !s.comingSoon).map((sub) => sub.units.map((u) => `
-        <div class="parent-unit">
-          <h3>${u.emoji} ${u.skill} <small>· ${u.title}</small></h3>
-          <table>
-            <thead><tr><th>Level</th><th>Best</th><th>Rounds</th><th>First try</th><th>Last</th></tr></thead>
-            <tbody>
-              ${LEVELS.map((l) => {
-                const p = store.progress(`${sub.id}.${u.id}.${l.id}`);
-                return `<tr>
-                  <td>${peppers(l.peppers)}</td>
-                  <td>${p ? starRow(p.best) : '—'}</td>
-                  <td>${p?.plays || 0}</td>
-                  <td>${p?.total ? Math.round((100 * p.firstTry) / p.total) + '%' : '—'}</td>
-                  <td>${fmtDate(p?.last)}</td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-          <details>
-            <summary>What each level covers</summary>
-            <ul>${LEVELS.map((l) => `<li><b>${l.name}:</b> ${u.levels[l.id].parent}</li>`).join('')}</ul>
-          </details>
-          ${(() => {
-            const missed = LEVELS.flatMap((l) => (store.progress(`${sub.id}.${u.id}.${l.id}`)?.missed || []).map((m) => `${peppers(l.peppers)} ${esc(m)}`));
-            return missed.length ? `<details><summary>Recent tricky questions (${missed.length})</summary><ul class="missed">${missed.map((m) => `<li>${m}</li>`).join('')}</ul></details>` : '';
-          })()}
-        </div>`).join('')).join('')}
-      <button class="btn danger wide" id="reset">Reset all progress &amp; stickers</button>
+      ${html}
     </section>`;
-  app.querySelector('#reset').addEventListener('click', () => {
-    if (confirm(`Erase all of ${K}'s stars and stickers on this device?`)) { store.resetProgress(); grownups(); }
-  });
+  app.querySelectorAll('[data-reset]').forEach((b) => b.addEventListener('click', () => {
+    const p = profileById(b.dataset.reset);
+    if (confirm(`Erase all of ${p.name}'s stars and stickers on this device?`)) { store.resetProfile(p.id); grownups(); }
+  }));
 }
 
 // ---------------- router ----------------
@@ -266,11 +308,14 @@ function route() {
   if (a === 'stickers') return stickersScreen();
   if (a === 'settings') return settingsScreen();
   if (a === 'grownups') return grownups();
+  if (a === 'who') return whoScreen();
   return home();
 }
 
 window.addEventListener('hashchange', route);
-route();
+// Shared phone: opening the app fresh always asks who's playing.
+if (!location.hash || location.hash === '#/' || !store.currentId()) whoScreen();
+else route();
 
 // Offline support / install to home screen.
 if ('serviceWorker' in navigator && location.protocol === 'https:') {

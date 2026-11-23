@@ -6,7 +6,8 @@ import { confetti } from './confetti.js';
 import { levelById, nextLevel, prevLevel, peppers } from './levels.js';
 import { esc, pick, orList } from './util.js';
 import { awardStickers } from './stickers.js';
-import { FAMILY, ROUND_LENGTH } from './config.js';
+import { ROUND_LENGTH } from './config.js';
+import { currentProfile } from './profiles.js';
 import { L, voiceLang } from './i18n.js';
 
 const PRAISE = () => L(['Great job!', 'You got it!', 'Awesome!', 'Super!', 'Yes!', 'Fantastic!', 'Way to go!', 'Nailed it!'],
@@ -14,6 +15,29 @@ const PRAISE = () => L(['Great job!', 'You got it!', 'Awesome!', 'Super!', 'Yes!
 const RETRY = () => L(['Not quite. Try again!', 'Oops! Have another try.', 'Almost! Try again.', "Good try! Let's look again."],
   ['Pas tout à fait. Essaie encore!', 'Oups! Essaie encore une fois.', 'Presque! Essaie encore.', 'Bel essai! Regardons encore.']);
 const say = (text, lang) => speech.say(text, lang || voiceLang());
+
+/** Wrap each word in a tappable span so a tricky word can be heard on its own. */
+function wordify(el) {
+  if (!el || !store.settings().tapWords) return;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) if (!walker.currentNode.parentElement.closest('.qbox, .w')) nodes.push(walker.currentNode);
+  for (const node of nodes) {
+    const parts = node.textContent.split(/(\s+)/);
+    if (parts.length === 1 && !/[\p{L}\p{N}]/u.test(parts[0])) continue;
+    const frag = document.createDocumentFragment();
+    for (const part of parts) {
+      if (/[\p{L}\p{N}]/u.test(part)) {
+        const span = document.createElement('span');
+        span.className = 'w';
+        span.textContent = part;
+        frag.appendChild(span);
+      } else frag.appendChild(document.createTextNode(part));
+    }
+    node.replaceWith(frag);
+  }
+}
+const bareWord = (w) => w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
 
 export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
   const lv = levelById(levelId);
@@ -73,6 +97,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
       ${q.visual ? `<div class="visual pop-in">${q.visual}</div>` : ''}
       <div class="hint" hidden></div>
       <div class="answers">${answersHTML()}</div>`;
+    wordify(stage.querySelector('.prompt-text'));
   }
 
   function answersHTML() {
@@ -95,6 +120,16 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
 
   // ---------- input ----------
   function onClick(e) {
+    const w = e.target.closest('.w');
+    if (w && game.contains(w)) {
+      const word = bareWord(w.textContent);
+      if (word) {
+        say(word, q?.lang);
+        w.classList.add('lit');
+        setTimeout(() => w.classList.remove('lit'), 900);
+      }
+      return;
+    }
     const t = e.target.closest('[data-act]');
     if (!t || !game.contains(t)) return;
     const act = t.dataset.act;
@@ -107,7 +142,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     if (act === 'next') { idx++; return next(); }
     if (locked) return;
     if (act === 'choose') return choose(t);
-    if (act === 'key') { sound.tap(); if (typed.length < 3) typed += t.dataset.k; return showTyped(); }
+    if (act === 'key') { sound.tap(); if (typed.length < 4) typed += t.dataset.k; return showTyped(); }
     if (act === 'del') { typed = typed.slice(0, -1); return showTyped(); }
     if (act === 'check') return checkTyped();
   }
@@ -185,6 +220,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
         </div>
         ${h.visual ? `<div class="hint-visual">${h.visual}</div>` : ''}
       </div>`;
+    wordify(box.querySelector('.hint-row p'));
     box.hidden = false;
     setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
   }
@@ -253,7 +289,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
       stars, firstTry, total: ROUND_LENGTH,
       missed: results.filter((r) => !r.ok).map((r) => r.text),
     });
-    const won = awardStickers(stars === 3 ? 2 : 1);
+    const won = awardStickers(stars === 3 ? 2 : 1, currentProfile().stickers);
     const up = nextLevel(levelId);
     const down = prevLevel(levelId);
     const title = pick(unit.doneTitles || [L('Round complete!', 'Partie terminée!')]);
@@ -282,6 +318,6 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     const stickerWords = won.length
       ? L(` You got ${won.length > 1 ? 'new stickers' : 'a new sticker'}!`, ` Tu as gagné ${won.length > 1 ? 'de nouveaux autocollants' : 'un nouvel autocollant'}!`)
       : '';
-    say(`${title} ${L(`${FAMILY.kid}, you earned ${stars} ${stars === 1 ? 'star' : 'stars'}!`, `${FAMILY.kid}, tu as gagné ${stars} ${stars === 1 ? 'étoile' : 'étoiles'}!`)}${stickerWords}`);
+    say(`${title} ${L(`${currentProfile().name}, you earned ${stars} ${stars === 1 ? 'star' : 'stars'}!`, `${currentProfile().name}, tu as gagné ${stars} ${stars === 1 ? 'étoile' : 'étoiles'}!`)}${stickerWords}`);
   }
 }

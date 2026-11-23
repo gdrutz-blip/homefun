@@ -58,9 +58,55 @@ export const STICKERS = [
   { id: 'moon', e: '🌙', name: 'Moon' },
 ];
 
-/** Give `n` stickers she doesn't have yet. Returns the new stickers. */
-export function awardStickers(n) {
-  const missing = shuffle(STICKERS.filter((s) => !store.hasSticker(s.id)));
+// Farrah's sticker book.
+export const STICKERS_FARRAH = [
+  { id: 'f-worm', e: '🪱', name: 'Gummy worm' },
+  { id: 'f-candy', e: '🍬', name: 'Candy' },
+  { id: 'f-waffle', e: '🧇', name: 'Waffles' },
+  { id: 'f-egg', e: '🍳', name: 'Fried egg' },
+  { id: 'f-bacon', e: '🥓', name: 'Breakfast sizzle' },
+  { id: 'f-cereal', e: '🥣', name: 'Cereal bowl' },
+  { id: 'f-chili', e: '🌶️', name: 'Chili pepper' },
+  { id: 'f-pizza', e: '🍕', name: 'Pizza' },
+  { id: 'f-puppy', e: '🐶', name: 'Puppy' },
+  { id: 'f-poodle', e: '🐩', name: 'Fancy poodle' },
+  { id: 'f-guide', e: '🦮', name: 'Good dog' },
+  { id: 'f-paw', e: '🐾', name: 'Paw prints' },
+  { id: 'f-bone', e: '🦴', name: 'Dog bone' },
+  { id: 'f-dance', e: '💃', name: 'Dancer' },
+  { id: 'f-moon', e: '🕺', name: 'Dance moves' },
+  { id: 'f-glove', e: '🧤', name: 'Sparkly glove' },
+  { id: 'f-hat', e: '🎩', name: 'Fancy hat' },
+  { id: 'f-music', e: '🎶', name: 'Music notes' },
+  { id: 'f-mic', e: '🎤', name: 'Microphone' },
+  { id: 'f-cart', e: '🤸‍♀️', name: 'Cartwheel' },
+  { id: 'f-medal', e: '🥇', name: 'Gold medal' },
+  { id: 'f-trophy', e: '🏆', name: 'Trophy' },
+  { id: 'f-bike', e: '🚲', name: 'Bike' },
+  { id: 'f-soccer', e: '⚽', name: 'Soccer ball' },
+  { id: 'f-basket', e: '🏀', name: 'Basketball' },
+  { id: 'f-hockey', e: '🏒', name: 'Hockey stick' },
+  { id: 'f-book', e: '📖', name: 'Good book' },
+  { id: 'f-pencil', e: '✏️', name: 'Doodle pencil' },
+  { id: 'f-bed', e: '🛏️', name: 'Perfectly made bed' },
+  { id: 'f-box', e: '🗃️', name: 'Organized box' },
+  { id: 'f-wand', e: '🪄', name: 'Magic wand' },
+  { id: 'f-owl', e: '🦉', name: 'Owl' },
+  { id: 'f-broom', e: '🧹', name: 'Broomstick' },
+  { id: 'f-coaster', e: '🎢', name: 'Roller coaster' },
+  { id: 'f-wheel', e: '🎡', name: 'Ferris wheel' },
+  { id: 'f-palm', e: '🌴', name: 'Palm tree' },
+  { id: 'f-cabin', e: '🛶', name: 'Cottage canoe' },
+  { id: 'f-baby', e: '👶', name: 'Baby' },
+  { id: 'f-kids', e: '🧒', name: 'Cousin' },
+  { id: 'f-play', e: '▶️', name: 'Play button' },
+  { id: 'f-heart', e: '💜', name: 'Purple heart' },
+  { id: 'f-star', e: '🌟', name: 'Star' },
+];
+
+/** Give `n` stickers from `list` she doesn't have yet. Returns the new stickers. */
+export function awardStickers(n, list = STICKERS) {
+  const missing = shuffle(list.filter((s) => !store.hasSticker(s.id)));
   const won = missing.slice(0, n);
   won.forEach((s) => store.addSticker(s.id));
   return won;

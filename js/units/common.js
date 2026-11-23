@@ -38,13 +38,13 @@ export function wordQ({ options, ...q }) {
   const right = opts.find((o) => String(o.value) === String(q.answer));
   return {
     revealLabel: right?.label,
-    revealSay: right?.label,
+    revealSay: right?.say || right?.label,
     ...q,
     plain: q.plain || stripTags(`${q.text} ${q.big || ''}`),
     type: 'choice',
     choiceStyle: 'word',
     sayChoices: true,
-    choices: opts.map((o) => ({ label: o.label, value: o.value, say: o.label })),
+    choices: opts.map((o) => ({ label: o.label, value: o.value, say: o.say || o.label })),
   };
 }
 
