@@ -1,5 +1,5 @@
 // Offline support. Network first (so updates show up right away), cache as a fallback.
-const CACHE = 'mia-review-v5';
+const CACHE = 'mia-review-v6';
 const CORE = [
   './', 'index.html', 'manifest.json', 'css/styles.css',
   'js/app.js', 'js/config.js', 'js/util.js', 'js/storage.js', 'js/speech.js', 'js/sound.js',
@@ -11,6 +11,9 @@ const CORE = [
   'js/units/social/map.js', 'js/units/social/traditions.js',
   'js/units/french/mots.js', 'js/units/french/nombres.js',
   'js/mix.js', 'js/units/math/money2.js', 'js/units/math/numbers200.js', 'js/units/math/fractions2.js',
+  'js/units/g3/science/plants.js', 'js/units/g3/science/forces.js',
+  'js/units/g3/social/ontario.js', 'js/units/g3/social/longago.js',
+  'js/units/g3/french/danse.js', 'js/units/g3/french/journal.js',
   'js/profiles.js', 'js/subjects-g3.js', 'js/visuals3.js',
   'js/units/g3/math/multiply.js', 'js/units/g3/math/divide.js', 'js/units/g3/math/addsub.js',
   'js/units/g3/math/numbers.js', 'js/units/g3/math/fractions.js', 'js/units/g3/math/money.js',

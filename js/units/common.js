@@ -78,3 +78,20 @@ export function sayEq(s) {
     .replace(/=/g, L(' equals ', ' égale '))
     .replace(/\?/g, L(' what? ', ' combien? '));
 }
+
+/**
+ * Quick multiple-choice question from a fact: { t: question, a: right answer, o: [wrong answers], h: hint, e?: emoji picture }.
+ * The right answer is mixed in with the wrong ones.
+ */
+export function factQ(f, { badge, prefix = 'f' } = {}) {
+  const shuffled = [f.a, ...f.o].map((v) => ({ v, r: Math.random() })).sort((x, y) => x.r - y.r).map((x) => x.v);
+  return wordQ({
+    key: `${prefix}-${f.t.slice(0, 40)}`,
+    badge,
+    text: f.t,
+    visual: f.e ? `<div class="vcard"><span class="big-emoji">${f.e}</span></div>` : (f.visual || ''),
+    options: shuffled,
+    answer: f.a,
+    hint: { text: f.h },
+  });
+}

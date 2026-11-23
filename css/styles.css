@@ -382,6 +382,16 @@ body[data-theme="pancake"] { --accent: #c77d1e; --accent-dark: #8a530f; --bg1: #
 .coins.small .coin, .choices.visual .choice .coins.small svg.coin { width: 34px; height: 34px; max-width: 34px; aspect-ratio: auto; }
 .choices.visual .choice .coins.small { flex-wrap: wrap; justify-content: center; }
 
+body[data-theme="garden"]  { --accent: #2e7d32; --accent-dark: #1b5e20; --bg1: #e8f5e9; --bg2: #fff3e0; }
+body[data-theme="bike"]    { --accent: #1565c0; --accent-dark: #0d47a1; --bg1: #e3f2fd; --bg2: #f1f8e9; }
+body[data-theme="history"] { --accent: #6d4c41; --accent-dark: #4e342e; --bg1: #f6efe6; --bg2: #e9f1e3; }
+body[data-theme="dance"]   { --accent: #c2185b; --accent-dark: #880e4f; --bg1: #fce4ec; --bg2: #ede7f6; }
+body[data-theme="doodle"]  { --accent: #455a64; --accent-dark: #263238; --bg1: #fffde7; --bg2: #eceff1; }
+.diary {
+  display: block; margin-bottom: 8px; padding: 10px 12px; border-radius: 12px; font-size: 1.05rem;
+  background: repeating-linear-gradient(#fffef6 0 27px, #cfe3f5 27px 28px); border-left: 4px solid #e57373;
+}
+
 /* ---------- surprise / tricky ---------- */
 .mix-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 .mix-btn {

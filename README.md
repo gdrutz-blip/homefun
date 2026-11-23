@@ -22,6 +22,17 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🍕 Pizza Night at the Cottage | Fractions | Halves, thirds, fourths; equal parts | 3/4, 5/6…; match pictures | Compare unit fractions, pizza left over |
 | 🎢 Amusement Park Day | Money | Coins to $1 | Loonies, toonies, change from $1 | Change from $5/$10, enough money? |
 
+### Farrah's Science, Social Studies and Français
+
+| Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
+|---|---|---|---|---|
+| 🌱 Farrah's Chili Garden | Growth & changes in plants | Plant parts, needs | Life cycle, parts we eat | Seed travel, bees, plant facts |
+| 🚲 Bike Park & Sports Day | Forces causing movement | Push or pull | Gravity, friction, magnets, static | Surfaces, attract/repel, how forces change motion |
+| 🚗 Ontario Road Trip | Living & working in Ontario | Capitals, Great Lakes, our town | Regions, land use and jobs | Land-use choices, maps |
+| ⏳ Time Travel to Upper Canada | Communities 1780–1850 | Daily life long ago | First Nations and settlers | How communities changed |
+| 💃 Le studio de danse | Verbs, opposites, plurals | être/avoir (je, tu, il) | être/avoir/aller, all subjects | Plurals, opposites, mixed verbs |
+| 📓 Le journal de Farrah | Reading | Question words | Diary pages | Harder reading, correct sentences |
+
 ## Special rounds (both girls)
 
 - **🎲 Surprise me!** Eight questions mixed from all her games. Each question is at the level she's ready for (one level above where she already has 2+ stars).
