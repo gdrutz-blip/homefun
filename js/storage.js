@@ -3,8 +3,8 @@
 const KEY = 'familyReview.v2';
 const OLD_KEY = 'miaReview.v1'; // before profiles existed: everything belonged to Mia
 
-const BASE_SETTINGS = { autoRead: true, sound: true, slow: false, lang: 'en', tapWords: true };
-const newProfile = (settings = {}) => ({ settings: { ...BASE_SETTINGS, ...settings }, progress: {}, stickers: [], tricky: [] });
+const BASE_SETTINGS = { autoRead: true, sound: true, slow: false, lang: 'en', tapWords: true, followAlong: true, bigText: false };
+const newProfile = (settings = {}) => ({ settings: { ...BASE_SETTINGS, ...settings }, progress: {}, stickers: [], tricky: [], avatar: null, stats: {} });
 
 function load() {
   try {
@@ -40,6 +40,14 @@ function cur() {
 export const store = {
   currentId: () => data.current,
   /** Switch player. `defaults` are the starting settings for a brand-new profile. */
+  /** Run `fn(settings)` once per profile (keyed by `key`) — used for one-time default changes. */
+  migrateOnce(id, key, fn) {
+    const p = data.profiles[id];
+    if (!p || p.settings['_m_' + key]) return;
+    fn(p.settings);
+    p.settings['_m_' + key] = true;
+    save();
+  },
   setCurrent(id, defaults = {}) {
     data.current = id;
     if (!data.profiles[id]) data.profiles[id] = newProfile(defaults);
@@ -65,8 +73,19 @@ export const store = {
     p.last = Date.now();
     p.missed = [...missed, ...(p.missed || [])].slice(0, 8);
     prog[key] = p;
+    const st = (cur().stats = cur().stats || {});
+    st.rounds = (st.rounds || 0) + 1;
+    if (firstTry === total && total >= 5) st.perfect = (st.perfect || 0) + 1;
     save();
   },
+
+  // Small counters for trophies (rounds, perfect rounds, tricky questions beaten…).
+  stats: () => cur().stats || {},
+  bump(name, n = 1) { const st = (cur().stats = cur().stats || {}); st[name] = (st[name] || 0) + n; save(); },
+
+  // Dress-up avatar choices (buddy, hat, extra, background).
+  avatar: () => cur().avatar,
+  setAvatar(patch) { cur().avatar = { ...(cur().avatar || {}), ...patch }; save(); },
 
   totalStars: () => Object.values(cur().progress).reduce((s, p) => s + (p.best || 0), 0),
 
@@ -84,6 +103,8 @@ export const store = {
     const p = cur();
     if (!p.tricky?.some((t) => t.id === id)) return;
     p.tricky = p.tricky.filter((t) => t.id !== id);
+    p.stats = p.stats || {};
+    p.stats.trickyCleared = (p.stats.trickyCleared || 0) + 1;
     save();
   },
 

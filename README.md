@@ -42,6 +42,18 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 💃 Le studio de danse | Verbs, opposites, plurals | être/avoir (je, tu, il) | être/avoir/aller, all subjects | Plurals, opposites, mixed verbs |
 | 📓 Le journal de Farrah | Reading | Question words | Diary pages | Harder reading, correct sentences |
 
+## Reading support and voice
+
+- **Read out loud by itself** (⚙️ Settings): speaks questions, hints and cheers. It's **on for Mia and off for Farrah**. With it off, nothing is spoken until she taps a 🔊 button or a word.
+- **Highlight each word as it is read:** when a question or hint is read aloud, each word lights up in turn. Works with voices that report word positions, and falls back to estimated timing for voices that don't.
+- **Tap a word to hear it**, **Read slowly**, and **Bigger text** are also in Settings.
+
+## Rewards
+
+- **⭐ Stars and 📒 stickers** after every round.
+- **👗 Dress-up closet:** pick a buddy (🦄🐶🦊🦖…), a hat, an extra (🎸🍕🪱🚲…) and a background. Items unlock as her total stars grow, and the end-of-round screen announces new ones.
+- **🏆 Trophy shelf:** milestones (rounds, stars, perfect rounds, Spicy Hero, Explorer, Tricky Tamer…) and a "game crown" for earning 3 stars on all three levels of any game.
+
 ## Special rounds (both girls)
 
 - **🎲 Surprise me!** Eight questions mixed from all her games. Each question is at the level she's ready for (one level above where she already has 2+ stars).

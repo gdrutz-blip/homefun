@@ -406,6 +406,51 @@ body[data-theme="graph"]      { --accent: #6a1b9a; --accent-dark: #4a148c; --bg1
 .pict-items { font-size: 1.15rem; line-height: 1.2; flex-wrap: wrap; display: flex; }
 .pict-key { margin-top: 6px; font-size: .85rem; color: var(--ink-soft); text-align: right; }
 
+/* ---------- reading support ---------- */
+.w.speaking { background: #ffe27a; box-shadow: 0 0 0 3px #ffe27a; border-radius: 6px; color: #000; }
+body[data-big="1"] .prompt-text { font-size: 1.55rem; line-height: 1.55; }
+body[data-big="1"] .hint-row p, body[data-big="1"] .diary { font-size: 1.35rem; }
+body[data-big="1"] .choices.word .choice { font-size: 1.8rem; }
+body[data-big="1"] .big-eq { font-size: 2.7rem; }
+
+/* ---------- rewards ---------- */
+.avatar { --s: 96px; width: var(--s); height: var(--s); border-radius: 50%; position: relative; display: inline-grid; place-items: center;
+  box-shadow: 0 4px 0 rgba(42,35,64,.18), inset 0 0 0 3px rgba(255,255,255,.7); font-size: calc(var(--s) * .56); line-height: 1; vertical-align: middle; flex: none; }
+.av-buddy { transform: translateY(6%); }
+.av-hat { position: absolute; top: -16%; left: 50%; transform: translateX(-50%) rotate(-10deg); font-size: .48em; filter: drop-shadow(0 2px 0 rgba(0,0,0,.15)); }
+.av-extra { position: absolute; right: -8%; bottom: -4%; font-size: .38em; background: #fff; border-radius: 50%; width: 1.35em; height: 1.35em; display: grid; place-items: center; box-shadow: 0 2px 0 rgba(0,0,0,.15); }
+.who-avatar .avatar { margin: 6px 0; }
+.switch-player .avatar { box-shadow: none; }
+.rewards-hero, .closet-preview { display: flex; flex-direction: column; align-items: center; gap: 10px; background: #fff; border-radius: var(--radius); padding: 18px 14px 16px; box-shadow: var(--shadow); }
+.rewards-hero .btn { width: 100%; max-width: 280px; }
+.rewards-hero .avatar, .closet-preview .avatar { margin-top: 10px; }
+.trophy-title { margin: 20px 0 8px; font-size: 1.2rem; }
+.trophy-title small { font-family: var(--font); font-weight: 400; font-size: .8rem; color: var(--ink-soft); }
+.trophy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.trophy { border: 0; border-radius: 18px; background: #fff; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; box-shadow: 0 4px 0 rgba(42,35,64,.12); min-height: 112px; }
+.trophy.earned { background: linear-gradient(180deg, #fff, #fff4c7); box-shadow: 0 4px 0 #e8b400; }
+.trophy.locked { opacity: .65; background: rgba(255,255,255,.6); box-shadow: none; border: 2px dashed rgba(42,35,64,.15); }
+.t-emoji { font-size: 2.2rem; line-height: 1.1; }
+.t-name { font-family: var(--display); font-weight: 600; font-size: .85rem; line-height: 1.15; }
+.t-how { font-size: .68rem; color: var(--ink-soft); line-height: 1.2; }
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 14px 0 10px; }
+.tab { border: 0; border-radius: 14px; padding: 10px 2px; background: rgba(255,255,255,.7); font-weight: 700; font-size: .85rem; }
+.tab.on { background: var(--accent); color: #fff; }
+.closet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.closet-item { border: 3px solid transparent; border-radius: 16px; background: #fff; aspect-ratio: 1; display: grid; place-items: center; position: relative; box-shadow: 0 4px 0 rgba(42,35,64,.12); }
+.closet-item.sel { border-color: var(--accent); box-shadow: 0 4px 0 var(--accent-dark); }
+.closet-item.locked { background: rgba(255,255,255,.55); box-shadow: none; }
+.ci-pic { font-size: 2.2rem; }
+.ci-cost { position: absolute; bottom: 4px; font-size: .7rem; font-weight: 700; color: var(--ink-soft); }
+.swatch { display: block; width: 52px; height: 52px; border-radius: 50%; box-shadow: inset 0 0 0 3px rgba(255,255,255,.8), 0 1px 3px rgba(0,0,0,.25); }
+.new-trophies, .new-items { background: #fff8d6; border-radius: 18px; padding: 10px; margin-bottom: 12px; }
+.new-trophies p, .new-items p { margin: 0 0 6px; font-weight: 700; }
+.trophy-chip { display: inline-block; background: #fff; border-radius: 999px; padding: 6px 12px; margin: 3px; font-weight: 700; box-shadow: 0 3px 0 #e8b400; }
+.closet-new { display: inline-grid; place-items: center; font-size: 2.6rem; margin: 0 6px; animation: wiggle 1.2s ease-in-out infinite; }
+.new-items .btn { margin-top: 8px; min-height: 46px; padding: 8px 18px; }
+.bottom-nav { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.nav-btn { font-size: .78rem; }
+
 /* ---------- surprise / tricky ---------- */
 .mix-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 .mix-btn {

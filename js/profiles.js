@@ -14,6 +14,8 @@ export const PROFILES = [
     id: 'farrah', name: 'Farrah', grade: 3, avatar: '🐶', color: '#0f8b8d', look: 'farrah',
     subjects: SUBJECTS_G3, stickers: STICKERS_FARRAH,
     defaults: { autoRead: false },
+    // Farrah chooses to turn the voice on herself (Settings → Read out loud). Reset it once if it was on.
+    migrations: { voiceOptIn: (settings) => { settings.autoRead = false; } },
   },
 ];
 
@@ -23,5 +25,8 @@ export const findSubject = (id) => currentProfile().subjects.find((s) => s.id ==
 export const findUnit = (subjectId, unitId) => findSubject(subjectId)?.units.find((u) => u.id === unitId);
 export function selectProfile(id) {
   const p = profileById(id);
-  if (p) store.setCurrent(p.id, p.defaults);
+  if (!p) return;
+  store.setCurrent(p.id, p.defaults);
+  // One-time default changes (keyed so they only run once per profile).
+  for (const [key, fn] of Object.entries(p.migrations || {})) store.migrateOnce(p.id, key, fn);
 }

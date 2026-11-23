@@ -4,6 +4,8 @@ import { store } from './storage.js';
 const synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
 let voices = [];
 let current = null; // keep a reference so Chrome doesn't garbage-collect mid-sentence
+let timers = [];     // follow-along timers (used when the voice doesn't report word boundaries)
+let endCb = null;
 
 function refresh() { if (synth) voices = synth.getVoices(); }
 if (synth) {
@@ -48,26 +50,67 @@ function clean(text, lang = 'en') {
     .trim();
 }
 
+function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+function finish() { clearTimers(); const cb = endCb; endCb = null; cb?.(); }
+
 export const speech = {
   supported: !!synth,
 
-  say(text, lang = 'en-CA') {
+  /**
+   * Speak `text`. Options:
+   *   onWord(index, word) — called as each word is spoken (for follow-along highlighting)
+   *   onEnd() — called when speech ends or is cut off
+   */
+  say(text, lang = 'en-CA', { onWord = null, onEnd = null } = {}) {
     if (!synth || !text) return;
     const words = clean(text, lang);
     if (!words) return;
     const wasBusy = synth.speaking || synth.pending;
     synth.cancel();
+    finish(); // end any earlier follow-along
+    endCb = onEnd;
+
     const u = new SpeechSynthesisUtterance(words);
     u.lang = lang;
     const v = voiceFor(lang);
     if (v) u.voice = v;
-    u.rate = store.settings().slow ? 0.75 : 0.95;
+    const rate = store.settings().slow ? 0.75 : 0.95;
+    u.rate = rate;
     u.pitch = 1.05;
     current = u;
+
+    if (onWord) {
+      const list = [...words.matchAll(/\S+/g)].map((m) => ({ start: m.index, end: m.index + m[0].length, word: m[0] }));
+      let gotBoundary = false;
+      let last = -1;
+      const emit = (i) => { if (i !== last && list[i]) { last = i; onWord(i, list[i].word); } };
+      u.onboundary = (e) => {
+        if (e.name && e.name !== 'word') return;
+        gotBoundary = true;
+        clearTimers();
+        const i = list.findIndex((w) => e.charIndex >= w.start && e.charIndex < w.end + 1);
+        if (i >= 0) emit(i);
+      };
+      // Many Android voices don't report boundaries. If none arrive, estimate the timing.
+      u.onstart = () => {
+        timers.push(setTimeout(() => {
+          if (gotBoundary) return;
+          let t = 0;
+          const msPerChar = 72 / (rate / 0.95);
+          list.forEach((w, i) => {
+            timers.push(setTimeout(() => emit(i), Math.max(0, t - 450)));
+            t += (w.word.length + 1.2) * msPerChar + (/[.,!?;:]$/.test(w.word) ? 220 : 0);
+          });
+        }, 450));
+      };
+    }
+    u.onend = finish;
+    u.onerror = finish;
+
     // Chrome on Android sometimes drops an utterance queued right after cancel().
     if (wasBusy) setTimeout(() => synth.speak(u), 80);
     else synth.speak(u);
   },
 
-  stop() { if (synth) synth.cancel(); },
+  stop() { if (synth) synth.cancel(); finish(); },
 };

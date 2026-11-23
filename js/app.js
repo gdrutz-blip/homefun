@@ -6,6 +6,7 @@ import { sound } from './sound.js';
 import { runRound } from './engine.js';
 import { surpriseUnit, trickyUnit } from './mix.js';
 import { esc } from './util.js';
+import { avatarOf, avatarHTML, computeTrophies, SLOTS, itemPreview } from './rewards.js';
 import { L, isFr, voiceLang, forceLang } from './i18n.js';
 
 const app = document.getElementById('app');
@@ -26,6 +27,7 @@ const topBar = (back, title, sayText, lang) => `
 const starRow = (n) => `<span class="mini-stars">${[1, 2, 3].map((i) => `<span class="${i <= n ? 'on' : ''}">★</span>`).join('')}</span>`;
 
 function setTheme(t) {
+  document.body.dataset.big = store.settings().bigText ? '1' : '0';
   document.body.dataset.theme = t || 'home';
   document.body.dataset.profile = currentProfile().look;
 }
@@ -52,7 +54,7 @@ function whoScreen() {
     <section class="who-grid">
       ${PROFILES.map((p) => `
         <button class="who-card" data-pick="${p.id}" style="--c:${p.color}">
-          <span class="who-avatar">${p.avatar}</span>
+          <span class="who-avatar">${avatarHTML(avatarOf(p.id), 104)}</span>
           <span class="who-name">${p.name}</span>
           <span class="who-grade">Grade ${p.grade}</span>
         </button>`).join('')}
@@ -72,7 +74,7 @@ function home() {
   const K = prof.name;
   app.innerHTML = `
     <section class="hero pop-in">
-      <button class="switch-player" data-go="#/who" aria-label="Switch player">${prof.avatar} <span>Switch</span></button>
+      <button class="switch-player" data-go="#/who" aria-label="Switch player">${avatarHTML(avatarOf(prof.id), 30)} <span>Switch</span></button>
       <div class="hero-row">
         <h1>Hi ${K}! 👋</h1>
         ${speakBtn(`Hi ${K}! What do you want to practice today?`)}
@@ -100,6 +102,7 @@ function home() {
         : '<div class="mix-btn tricky off"><span class="mix-emoji">🧠</span><span><b>Tricky ones</b><small>None yet — great job!</small></span></div>'}
     </section>
     <nav class="bottom-nav">
+      <button class="nav-btn" data-go="#/rewards"><span class="nav-emoji">🏆</span>Rewards</button>
       <button class="nav-btn" data-go="#/stickers"><span class="nav-emoji">📒</span>Stickers</button>
       <button class="nav-btn" data-go="#/settings"><span class="nav-emoji">⚙️</span>Settings</button>
       <button class="nav-btn" data-go="#/grownups"><span class="nav-emoji">🔒</span>Grown-ups</button>
@@ -135,7 +138,7 @@ function subjectScreen(subjectId) {
     store.setSetting('lang', b.dataset.langSet);
     sound.tap();
     subjectScreen(subjectId);
-    speech.say(isFr() ? 'En français!' : 'In English!', voiceLang());
+    if (store.settings().autoRead) speech.say(isFr() ? 'En français!' : 'In English!', voiceLang());
   }));
 }
 
@@ -207,6 +210,60 @@ function stickersScreen() {
     </section>`;
 }
 
+function rewardsScreen() {
+  setTheme('home');
+  const prof = currentProfile();
+  const stars = store.totalStars();
+  const all = computeTrophies(prof);
+  const got = all.filter((t) => t.earned).length;
+  const card = (t) => `
+    <button class="trophy ${t.earned ? 'earned' : 'locked'}" data-say="${esc(t.earned ? `${t.name}. ${t.how}.` : `Locked. ${t.how}.`)}">
+      <span class="t-emoji">${t.earned ? t.e : '🔒'}</span>
+      <span class="t-name">${esc(t.name)}</span>
+      ${t.earned ? '' : `<span class="t-how">${esc(t.how)}</span>`}
+    </button>`;
+  app.innerHTML = `
+    ${topBar('#/', '🏆 My Rewards', `You have ${got} of ${all.length} trophies.`)}
+    <section class="rewards-hero pop-in">
+      ${avatarHTML(avatarOf(prof.id), 140)}
+      <p class="sub"><b>${prof.name}</b> · ⭐ ${stars} stars · 🏆 ${got} / ${all.length}</p>
+      <button class="btn primary" data-go="#/closet">Dress up 👗</button>
+      <button class="btn" data-go="#/stickers">Sticker book 📒</button>
+    </section>
+    <h3 class="trophy-title">Milestones</h3>
+    <section class="trophy-grid">${all.filter((t) => t.cat === 'milestone').map(card).join('')}</section>
+    <h3 class="trophy-title">Game crowns 👑 <small>3 stars on every level</small></h3>
+    <section class="trophy-grid">${all.filter((t) => t.cat === 'game').map(card).join('')}</section>`;
+}
+
+function closetScreen(tab = 'buddy') {
+  setTheme('home');
+  const prof = currentProfile();
+  const stars = store.totalStars();
+  const av = avatarOf(prof.id);
+  const slot = SLOTS[tab];
+  const costs = Object.values(SLOTS).flatMap((s) => s.list.map((i) => i.cost)).filter((c) => c > stars);
+  const nextCost = costs.length ? Math.min(...costs) : null;
+  app.innerHTML = `
+    ${topBar('#/rewards', '👗 Dress-up', 'Pick your buddy, hat and more!')}
+    <section class="closet-preview">${avatarHTML(av, 150)}
+      <p class="note">⭐ ${stars} stars ${nextCost ? `· something new at ⭐ ${nextCost}` : '· you unlocked everything!'}</p></section>
+    <div class="tabs">${Object.entries(SLOTS).map(([k, v]) => `<button class="tab ${k === tab ? 'on' : ''}" data-tab="${k}">${v.label}</button>`).join('')}</div>
+    <section class="closet-grid">
+      ${slot.list.map((it) => {
+        const ok = stars >= it.cost;
+        return `<button class="closet-item ${av[tab] === it.id ? 'sel' : ''} ${ok ? '' : 'locked'}" data-item="${it.id}" ${ok ? '' : 'disabled'} aria-label="${ok ? esc(it.name || it.id) : `Unlocks at ${it.cost} stars`}">
+          <span class="ci-pic">${ok ? itemPreview(tab, it) : '🔒'}</span>${ok ? '' : `<span class="ci-cost">⭐ ${it.cost}</span>`}</button>`;
+      }).join('')}
+    </section>`;
+  app.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { sound.tap(); closetScreen(b.dataset.tab); }));
+  app.querySelectorAll('[data-item]').forEach((b) => b.addEventListener('click', () => {
+    sound.tap();
+    store.setAvatar({ [tab]: b.dataset.item });
+    closetScreen(tab);
+  }));
+}
+
 function settingsScreen() {
   setTheme('home');
   const s = store.settings();
@@ -219,8 +276,10 @@ function settingsScreen() {
   app.innerHTML = `
     ${topBar('#/', `⚙️ ${kidName()}'s Settings`, 'Settings')}
     <section class="settings">
-      ${toggle('autoRead', 'Read questions out loud by itself', '🗣️')}
+      ${toggle('autoRead', 'Read out loud by itself (questions, hints and cheers)', '🗣️')}
+      ${toggle('followAlong', 'Highlight each word as it is read', '🖍️')}
       ${toggle('tapWords', 'Tap a word to hear it', '👆')}
+      ${toggle('bigText', 'Bigger text', '🔠')}
       ${toggle('slow', 'Read slowly', '🐢')}
       ${toggle('sound', 'Sound effects', '🔔')}
       <button class="setting ${isFr() ? 'on' : ''}" data-lang-toggle>
@@ -228,6 +287,7 @@ function settingsScreen() {
         <span class="setting-label">Games in French (Math, Science, Social Studies)</span>
         <span class="switch"><span></span></span>
       </button>
+      <p class="note">With “read out loud by itself” off, nothing is spoken until you tap a 🔊 button or a word.</p>
       <button class="btn primary wide" data-test-voice>🔊 Test the voice</button>
       ${speech.supported ? '' : '<p class="note">This browser can’t read out loud. Try Chrome.</p>'}
     </section>`;
@@ -235,6 +295,7 @@ function settingsScreen() {
     const k = b.dataset.setting;
     store.setSetting(k, !store.settings()[k]);
     b.classList.toggle('on', store.settings()[k]);
+    document.body.dataset.big = store.settings().bigText ? '1' : '0';
     sound.tap();
   }));
   app.querySelector('[data-lang-toggle]').addEventListener('click', (e) => {
@@ -330,6 +391,8 @@ function route() {
   if (a === 'settings') return settingsScreen();
   if (a === 'grownups') return grownups();
   if (a === 'who') return whoScreen();
+  if (a === 'rewards') return rewardsScreen();
+  if (a === 'closet') return closetScreen();
   if (a === 'surprise' || a === 'tricky') return playMix(a);
   return home();
 }

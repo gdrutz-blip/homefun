@@ -8,13 +8,16 @@ import { esc, pick, orList } from './util.js';
 import { awardStickers } from './stickers.js';
 import { ROUND_LENGTH } from './config.js';
 import { currentProfile } from './profiles.js';
+import { computeTrophies, newlyUnlocked, itemPreview } from './rewards.js';
 import { L, voiceLang } from './i18n.js';
 
 const PRAISE = () => L(['Great job!', 'You got it!', 'Awesome!', 'Super!', 'Yes!', 'Fantastic!', 'Way to go!', 'Nailed it!'],
   ['Bravo!', 'Tu as trouvé!', 'Génial!', 'Super!', 'Oui!', 'Fantastique!', 'Excellent!', 'Bien joué!']);
 const RETRY = () => L(['Not quite. Try again!', 'Oops! Have another try.', 'Almost! Try again.', "Good try! Let's look again."],
   ['Pas tout à fait. Essaie encore!', 'Oups! Essaie encore une fois.', 'Presque! Essaie encore.', 'Bel essai! Regardons encore.']);
+// say(): she asked for it (tapped 🔊 or a word). autoSay(): the app speaks by itself — only if "read aloud" is on.
 const say = (text, lang) => speech.say(text, lang || voiceLang());
+const autoSay = (text, lang) => { if (store.settings().autoRead) say(text, lang); };
 
 /** Wrap each word in a tappable span so a tricky word can be heard on its own. */
 function wordify(el) {
@@ -128,6 +131,24 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     </div>`;
   }
 
+  /** Read `text` aloud and light up each word in `container` as it is spoken (if "follow along" is on). */
+  function sayFollow(text, lang, container) {
+    const spans = container ? [...container.querySelectorAll('.w')] : [];
+    if (!store.settings().followAlong || !spans.length) return say(text, lang);
+    let ptr = 0, prev = null;
+    const norm = (s) => bareWord(s).toLowerCase();
+    const clear = () => { prev?.classList.remove('speaking'); prev = null; };
+    speech.say(text, lang || voiceLang(), {
+      onWord: (_, word) => {
+        const target = norm(word);
+        for (let k = ptr; k < Math.min(spans.length, ptr + 4); k++) {
+          if (norm(spans[k].textContent) === target) { clear(); spans[k].classList.add('speaking'); prev = spans[k]; ptr = k + 1; return; }
+        }
+      },
+      onEnd: clear,
+    });
+  }
+
   // ---------- input ----------
   function onClick(e) {
     const w = e.target.closest('.w');
@@ -144,7 +165,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     if (!t || !game.contains(t)) return;
     const act = t.dataset.act;
     if (act === 'say-q') return speakQuestion();
-    if (act === 'say-hint') return say(t.dataset.text);
+    if (act === 'say-hint') return sayFollow(t.dataset.text, undefined, stage.querySelector('.hint-row p'));
     if (act === 'quit') return confirmQuit();
     if (act === 'again') return onPlay(levelId);
     if (act === 'level') return onPlay(t.dataset.level);
@@ -163,7 +184,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
       const words = q.choices.map((c) => c.say || c.label);
       text += L(` Is it ${orList(words)}?`, ` Est-ce ${words.slice(0, -1).join(', ')} ou ${words[words.length - 1]}?`);
     }
-    say(text, q.lang);
+    sayFollow(text, q.lang, stage.querySelector('.prompt-text'));
   }
 
   function showTyped() {
@@ -199,7 +220,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     else dots[idx].classList.add('helped');
     const praise = pick([...PRAISE(), ...(unit.praise || []), ...(unit.praise || [])]);
     showBanner(`${praise}`, 'good');
-    say(praise);
+    autoSay(praise);
     setTimeout(() => { if (alive()) { idx++; next(); } }, 1500);
   }
 
@@ -213,7 +234,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     if (tries === 1) {
       const retry = pick(RETRY());
       showHint(retry);
-      say(`${retry} ${q.hint?.say || q.hint?.text || ''}`, q.lang);
+      if (store.settings().autoRead) sayFollow(`${retry} ${q.hint?.say || q.hint?.text || ''}`, q.lang, stage.querySelector('.hint-row p'));
     } else {
       reveal();
     }
@@ -250,7 +271,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
           <p class="small">${L("That one was tricky. You'll get the next one!", 'Celle-là était difficile. Tu vas réussir la prochaine!')}</p>
           <button class="btn primary" data-act="next">${L('Next', 'Suivant')} ➜</button>
         </div>`;
-      say(L(`The answer is ${q.revealSay || shown}. That one was tricky. You'll get the next one!`,
+      autoSay(L(`The answer is ${q.revealSay || shown}. That one was tricky. You'll get the next one!`,
         `La réponse est ${q.revealSay || shown}. Celle-là était difficile. Tu vas réussir la prochaine!`), q.lang);
       return;
     }
@@ -260,7 +281,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     const msg = L('Here it is! Tap the glowing answer.', 'La voici! Touche la réponse qui brille.');
     showHint(msg);
     const it = q.revealSay || (q.choiceStyle === 'visual' ? L('the glowing one', 'celle qui brille') : shown);
-    say(`${msg} ${L(`It's ${it}.`, `C'est ${it}.`)}`, q.lang);
+    autoSay(`${msg} ${L(`It's ${it}.`, `C'est ${it}.`)}`, q.lang);
   }
 
   function showBanner(text, kind) {
@@ -290,17 +311,22 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
       else m.remove();
     });
     game.appendChild(m);
-    say(L('Stop playing this round?', 'Arrêter cette partie?'));
+    autoSay(L('Stop playing this round?', 'Arrêter cette partie?'));
   }
 
   // ---------- end of round ----------
   function finish() {
     const firstTry = results.filter((r) => r.ok).length;
     const stars = firstTry >= N - 1 ? 3 : firstTry >= N - 3 ? 2 : 1;
+    const starsBefore = store.totalStars();
+    const trophiesBefore = new Set(computeTrophies().filter((t) => t.earned).map((t) => t.id));
     store.recordRound(progressKey, {
       stars, firstTry, total: N,
       missed: results.filter((r) => !r.ok).map((r) => r.text),
     });
+    if (mixed && unit.id === 'surprise') store.bump('surprise');
+    const newItems = newlyUnlocked(starsBefore, store.totalStars());
+    const newTrophies = computeTrophies().filter((t) => t.earned && !trophiesBefore.has(t.id));
     const won = awardStickers(stars === 3 ? 2 : 1, currentProfile().stickers);
     const up = mixed ? null : nextLevel(levelId);
     const down = mixed ? null : prevLevel(levelId);
@@ -318,6 +344,17 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
             <p>${won.length > 1 ? L('New stickers!', 'Nouveaux autocollants!') : L('New sticker!', 'Nouvel autocollant!')}</p>
             <div class="sticker-row">${won.map((s) => `<span class="sticker-big">${s.e}</span>`).join('')}</div>
           </div>` : ''}
+        ${newTrophies.length ? `
+          <div class="new-trophies">
+            <p>🏆 ${newTrophies.length > 1 ? 'New trophies!' : 'New trophy!'}</p>
+            ${newTrophies.map((t) => `<span class="trophy-chip">${t.e} ${esc(t.name)}</span>`).join('')}
+          </div>` : ''}
+        ${newItems.length ? `
+          <div class="new-items">
+            <p>🎁 ${newItems.length > 1 ? 'New things for your closet!' : 'New thing for your closet!'}</p>
+            <div class="sticker-row">${newItems.map((i) => `<span class="closet-new">${itemPreview(i.slot, i)}</span>`).join('')}</div>
+            <button class="btn" data-go="#/closet">Dress up 👗</button>
+          </div>` : ''}
         <div class="end-actions">
           ${stars >= 2 && up ? `<button class="btn spicy" data-act="level" data-level="${up.id}">${L('Try', 'Essaie')} ${lvName(up)} ${peppers(up.peppers)}</button>` : ''}
           <button class="btn primary" data-act="again">${L('Play again', 'Rejouer')} 🔁</button>
@@ -330,6 +367,6 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     const stickerWords = won.length
       ? L(` You got ${won.length > 1 ? 'new stickers' : 'a new sticker'}!`, ` Tu as gagné ${won.length > 1 ? 'de nouveaux autocollants' : 'un nouvel autocollant'}!`)
       : '';
-    say(`${title} ${L(`${currentProfile().name}, you earned ${stars} ${stars === 1 ? 'star' : 'stars'}!`, `${currentProfile().name}, tu as gagné ${stars} ${stars === 1 ? 'étoile' : 'étoiles'}!`)}${stickerWords}`);
+    autoSay(`${title} ${L(`${currentProfile().name}, you earned ${stars} ${stars === 1 ? 'star' : 'stars'}!`, `${currentProfile().name}, tu as gagné ${stars} ${stars === 1 ? 'étoile' : 'étoiles'}!`)}${stickerWords}`);
   }
 }
