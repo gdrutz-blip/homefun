@@ -7,6 +7,11 @@ import shapes3d from './units/math/shapes3d.js';
 import money2 from './units/math/money2.js';
 import numbers200 from './units/math/numbers200.js';
 import fractions2 from './units/math/fractions2.js';
+import measure from './units/math/measure.js';
+import time from './units/math/time.js';
+import data from './units/math/data.js';
+import machines from './units/science/machines.js';
+import weather from './units/science/weather.js';
 import animals from './units/science/animals.js';
 import matter from './units/science/matter.js';
 import map from './units/social/map.js';
@@ -17,11 +22,11 @@ import nombres from './units/french/nombres.js';
 export const SUBJECTS = [
   {
     id: 'math', name: 'Math', frName: 'Les maths', emoji: '🔢', color: '#ff7a59', bilingual: true,
-    units: [adding, subtracting, numbers200, skipcount, money2, fractions2, shapes2d, shapes3d],
+    units: [adding, subtracting, numbers200, skipcount, money2, fractions2, measure, time, data, shapes2d, shapes3d],
   },
   // Always in French (it's French practice!).
   { id: 'french', name: 'Français', frName: 'Français', emoji: '🥐', color: '#3d7bfd', forceLang: 'fr', units: [mots, nombres] },
-  { id: 'science', name: 'Science', frName: 'Les sciences', emoji: '🔬', color: '#2bb5a0', bilingual: true, units: [animals, matter] },
+  { id: 'science', name: 'Science', frName: 'Les sciences', emoji: '🔬', color: '#2bb5a0', bilingual: true, units: [animals, matter, machines, weather] },
   { id: 'social', name: 'Social Studies', frName: 'Études sociales', emoji: '🌎', color: '#ffb020', bilingual: true, units: [map, traditions] },
 ];
 

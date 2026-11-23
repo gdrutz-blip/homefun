@@ -22,6 +22,15 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🍕 Pizza Night at the Cottage | Fractions | Halves, thirds, fourths; equal parts | 3/4, 5/6…; match pictures | Compare unit fractions, pizza left over |
 | 🎢 Amusement Park Day | Money | Coins to $1 | Loonies, toonies, change from $1 | Change from $5/$10, enough money? |
 
+### Mia's Science (Grade 2)
+
+| Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
+|---|---|---|---|---|
+| 🐣 Gemma's Animal Book | Growth & changes in animals | Baby animals, eggs | Life cycles, fur/feathers/scales | Diet, animal needs |
+| 🍫 Mia's Chocolate Kitchen | Solids & liquids | Solid or liquid? | Melting, freezing | Sink/float, dissolving |
+| 🛝 Playground Machines | Movement & simple machines | Ways things move | Lever, ramp, wheel and axle, pulley | Which machine helps? friction |
+| 🌦️ Cottage Weather Station | Air & water | Water, air, wind | The water cycle | Air takes up space, protect water |
+
 ### Farrah's Science, Social Studies and Français
 
 | Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
@@ -50,6 +59,9 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🔧 Build-It Workshop | Numbers to 200 | Tens and ones, before/after | Compare, even/odd, count by 10s | Numbers 100–200 |
 | 🫧 Mia's Slime Shop | Money | Name coins, count nickels/dimes | Mixed coins to 100¢ | Make exact amounts, enough money? |
 | 🥞 Pancake Party | Fractions | Equal parts, halves | Halves, thirds, fourths in words | Sharing pancakes, comparing |
+| 📏 Gym Meet Measuring | Measuring length | Read the ruler (cm), cm or m? | Compare, estimate real objects | Start anywhere on the ruler, how much longer? |
+| ⏰ Mia's Busy Day | Telling time | O'clock, half past | Quarter past/to, time in words, calendar | 5 minutes, how long does it last? |
+| 📊 Ice Cream Vote | Graphs | Picture graphs | Bar graphs | How many more? How many in all? |
 
 **Science**
 

@@ -392,6 +392,20 @@ body[data-theme="doodle"]  { --accent: #455a64; --accent-dark: #263238; --bg1: #
   background: repeating-linear-gradient(#fffef6 0 27px, #cfe3f5 27px 28px); border-left: 4px solid #e57373;
 }
 
+body[data-theme="playground"] { --accent: #ef6c00; --accent-dark: #a64a00; --bg1: #fff3e0; --bg2: #e8f5e9; }
+body[data-theme="weather"]    { --accent: #0288d1; --accent-dark: #01579b; --bg1: #e1f5fe; --bg2: #f3e5f5; }
+body[data-theme="measure"]    { --accent: #00838f; --accent-dark: #005662; --bg1: #e0f7fa; --bg2: #fff8e1; }
+body[data-theme="clock"]      { --accent: #d84315; --accent-dark: #9f2f0c; --bg1: #fbe9e7; --bg2: #fffde7; }
+body[data-theme="graph"]      { --accent: #6a1b9a; --accent-dark: #4a148c; --bg1: #f3e5f5; --bg2: #e8f5e9; }
+.mapsvg { width: 100%; max-width: 340px; height: auto; }
+.clocksvg { max-width: 100%; height: auto; }
+.vcard .clocksvg { width: 170px; height: 170px; }
+.pict { background: #fff; border-radius: 12px; padding: 8px 10px; width: 100%; }
+.pict-row { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #eee; padding: 3px 0; }
+.pict-label { width: 118px; flex: none; font-size: .85rem; font-weight: 700; }
+.pict-items { font-size: 1.15rem; line-height: 1.2; flex-wrap: wrap; display: flex; }
+.pict-key { margin-top: 6px; font-size: .85rem; color: var(--ink-soft); text-align: right; }
+
 /* ---------- surprise / tricky ---------- */
 .mix-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 .mix-btn {
