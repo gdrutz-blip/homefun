@@ -4,7 +4,7 @@ const KEY = 'familyReview.v2';
 const OLD_KEY = 'miaReview.v1'; // before profiles existed: everything belonged to Mia
 
 const BASE_SETTINGS = { autoRead: true, sound: true, slow: false, lang: 'en', tapWords: true };
-const newProfile = (settings = {}) => ({ settings: { ...BASE_SETTINGS, ...settings }, progress: {}, stickers: [] });
+const newProfile = (settings = {}) => ({ settings: { ...BASE_SETTINGS, ...settings }, progress: {}, stickers: [], tricky: [] });
 
 function load() {
   try {
@@ -72,6 +72,20 @@ export const store = {
 
   hasSticker: (id) => cur().stickers.includes(id),
   addSticker(id) { if (!cur().stickers.includes(id)) { cur().stickers.push(id); save(); } },
+
+  // Questions she missed, saved so the "Tricky ones" round can replay them.
+  tricky: () => cur().tricky || [],
+  addTricky(entry) {
+    const p = cur();
+    p.tricky = [entry, ...(p.tricky || []).filter((t) => t.id !== entry.id)].slice(0, 30);
+    save();
+  },
+  removeTricky(id) {
+    const p = cur();
+    if (!p.tricky?.some((t) => t.id === id)) return;
+    p.tricky = p.tricky.filter((t) => t.id !== id);
+    save();
+  },
 
   resetProfile(id) {
     const p = data.profiles[id];

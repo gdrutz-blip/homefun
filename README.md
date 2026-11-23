@@ -22,6 +22,11 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🍕 Pizza Night at the Cottage | Fractions | Halves, thirds, fourths; equal parts | 3/4, 5/6…; match pictures | Compare unit fractions, pizza left over |
 | 🎢 Amusement Park Day | Money | Coins to $1 | Loonies, toonies, change from $1 | Change from $5/$10, enough money? |
 
+## Special rounds (both girls)
+
+- **🎲 Surprise me!** Eight questions mixed from all her games. Each question is at the level she's ready for (one level above where she already has 2+ stars).
+- **🧠 Tricky ones.** Every question she gets wrong is saved. This round replays them, and each one disappears once she gets it right on the first try.
+
 ## Mia's games (Grade 2)
 
 | Game | Skill | 🌶️ Mild | 🌶️🌶️ Medium | 🌶️🌶️🌶️ Spicy |
@@ -31,6 +36,9 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🎸 Garage Band | Skip counting & patterns | By 2s, 5s, 10s; AB patterns | Missing numbers, ABC patterns, "count by what?" | Backwards, by 20s/25s, from odd starts, to 200 |
 | 🧙‍♀️ Potion Class | 2D shapes | Name the shapes | Sides & vertices, rotated shapes | Riddles, wobbly (irregular) shapes, quadrilaterals |
 | 🤸‍♀️ Gymnastics Meet | 3D shapes | Name solids, real-world objects | Roll/stack, faces, face shapes | Edges, vertices, riddles |
+| 🔧 Build-It Workshop | Numbers to 200 | Tens and ones, before/after | Compare, even/odd, count by 10s | Numbers 100–200 |
+| 🫧 Mia's Slime Shop | Money | Name coins, count nickels/dimes | Mixed coins to 100¢ | Make exact amounts, enough money? |
+| 🥞 Pancake Party | Fractions | Equal parts, halves | Halves, thirds, fourths in words | Sharing pancakes, comparing |
 
 **Science**
 

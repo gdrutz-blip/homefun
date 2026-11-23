@@ -39,7 +39,8 @@ function wordify(el) {
 }
 const bareWord = (w) => w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
 
-export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
+export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, length = ROUND_LENGTH, mixed = false }) {
+  const N = length;
   const lv = levelById(levelId);
   const progressKey = `${subjectId}.${unit.id}.${levelId}`;
   const seen = new Set();
@@ -54,8 +55,8 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     <div class="game">
       <header class="game-top">
         <button class="icon-btn" data-act="quit" aria-label="Stop playing">✖</button>
-        <div class="dots">${Array.from({ length: ROUND_LENGTH }, () => '<span class="dot"></span>').join('')}</div>
-        <span class="lvl-badge" title="${lv.name}">${peppers(lv.peppers)}</span>
+        <div class="dots">${Array.from({ length: N }, () => '<span class="dot"></span>').join('')}</div>
+        <span class="lvl-badge" title="${lv.name}">${mixed ? unit.emoji : peppers(lv.peppers)}</span>
       </header>
       <div class="stage"></div>
     </div>`;
@@ -66,9 +67,18 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
   game.addEventListener('click', onClick);
   next();
 
+  // ---------- tricky questions: remember misses, forget them once she nails it ----------
+  function trackTricky(ok) {
+    const sub = q._subject || subjectId, uid = q._unit || unit.id;
+    const id = `${sub}|${uid}|${q.key}`;
+    if (ok) return store.removeTricky(id);
+    const { _subject, _unit, _level, ...plainQ } = q;
+    store.addTricky({ id, subjectId: sub, unitId: uid, levelId: _level || levelId, q: { ...plainQ, lang: q.lang || voiceLang() } });
+  }
+
   // ---------- flow ----------
   function next() {
-    if (idx >= ROUND_LENGTH) return finish();
+    if (idx >= N) return finish();
     for (let t = 0; t < 40; t++) {
       q = unit.makeQuestion(levelId, idx);
       if (!seen.has(q.key)) break;
@@ -184,6 +194,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     el.classList.add('right');
     sound.correct(unit.sound);
     results.push({ ok: tries === 0, text: q.plain });
+    trackTricky(tries === 0);
     if (!tries) dots[idx].classList.add('done');
     else dots[idx].classList.add('helped');
     const praise = pick([...PRAISE(), ...(unit.praise || []), ...(unit.praise || [])]);
@@ -230,6 +241,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     if (q.type === 'number') {
       locked = true;
       results.push({ ok: false, text: q.plain });
+      trackTricky(false);
       dots[idx].classList.add('helped');
       const box = stage.querySelector('.answers');
       box.innerHTML = `
@@ -284,14 +296,14 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
   // ---------- end of round ----------
   function finish() {
     const firstTry = results.filter((r) => r.ok).length;
-    const stars = firstTry >= ROUND_LENGTH - 1 ? 3 : firstTry >= ROUND_LENGTH - 3 ? 2 : 1;
+    const stars = firstTry >= N - 1 ? 3 : firstTry >= N - 3 ? 2 : 1;
     store.recordRound(progressKey, {
-      stars, firstTry, total: ROUND_LENGTH,
+      stars, firstTry, total: N,
       missed: results.filter((r) => !r.ok).map((r) => r.text),
     });
     const won = awardStickers(stars === 3 ? 2 : 1, currentProfile().stickers);
-    const up = nextLevel(levelId);
-    const down = prevLevel(levelId);
+    const up = mixed ? null : nextLevel(levelId);
+    const down = mixed ? null : prevLevel(levelId);
     const title = pick(unit.doneTitles || [L('Round complete!', 'Partie terminée!')]);
     const lvName = (l) => L(l.name, l.fr);
 
@@ -300,7 +312,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
       <section class="end-card pop-in">
         <h2>${title}</h2>
         <div class="stars">${[1, 2, 3].map((i) => `<span class="star ${i <= stars ? 'on' : ''}" style="--d:${i * 0.25}s">★</span>`).join('')}</div>
-        <p class="end-score">${L(`${firstTry} out of ${ROUND_LENGTH} on the first try!`, `${firstTry} sur ${ROUND_LENGTH} du premier coup!`)}</p>
+        <p class="end-score">${L(`${firstTry} out of ${N} on the first try!`, `${firstTry} sur ${N} du premier coup!`)}</p>
         ${won.length ? `
           <div class="new-stickers">
             <p>${won.length > 1 ? L('New stickers!', 'Nouveaux autocollants!') : L('New sticker!', 'Nouvel autocollant!')}</p>

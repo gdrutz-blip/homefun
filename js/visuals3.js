@@ -55,7 +55,11 @@ export function fracWords(k, n) {
 const SHADE = '#ff8a3d', EMPTY = '#fff4e6', LINE = '#5b3a1e';
 
 /** Pizza cut into n equal slices, k shaded. */
-export function pie(n, k, size = 150) {
+const PANCAKE = { shade: '#b86a1f', empty: '#f7d58e', crust: '#e2a650', line: '#7a4a12' };
+export const pancake = (n, k, size = 150) => pie(n, k, size, PANCAKE);
+
+export function pie(n, k, size = 150, pal = null) {
+  const SH = pal?.shade || SHADE, EM = pal?.empty || EMPTY, LN = pal?.line || LINE, CR = pal?.crust || '#f3c27a';
   const r = 46, cx = 50, cy = 50;
   let paths = '';
   for (let i = 0; i < n; i++) {
@@ -63,9 +67,9 @@ export function pie(n, k, size = 150) {
     const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0), x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
     const large = a1 - a0 > Math.PI ? 1 : 0;
     const d = n === 1 ? `M${cx - r},${cy} a${r},${r} 0 1,0 ${2 * r},0 a${r},${r} 0 1,0 ${-2 * r},0` : `M${cx},${cy} L${x0.toFixed(2)},${y0.toFixed(2)} A${r},${r} 0 ${large} 1 ${x1.toFixed(2)},${y1.toFixed(2)} Z`;
-    paths += `<path d="${d}" fill="${i < k ? SHADE : EMPTY}" stroke="${LINE}" stroke-width="2"/>`;
+    paths += `<path d="${d}" fill="${i < k ? SH : EM}" stroke="${LN}" stroke-width="2"/>`;
   }
-  return `<svg class="fracsvg" width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="${k}/${n}"><circle cx="50" cy="50" r="49" fill="#f3c27a"/>${paths}</svg>`;
+  return `<svg class="fracsvg" width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="${k}/${n}"><circle cx="50" cy="50" r="49" fill="${CR}"/>${paths}</svg>`;
 }
 
 /** Waffle bar split into n equal parts (or unequal `cuts` in 0..1), k shaded. */

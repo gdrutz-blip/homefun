@@ -4,6 +4,7 @@ import { store } from './storage.js';
 import { speech } from './speech.js';
 import { sound } from './sound.js';
 import { runRound } from './engine.js';
+import { surpriseUnit, trickyUnit } from './mix.js';
 import { esc } from './util.js';
 import { L, isFr, voiceLang, forceLang } from './i18n.js';
 
@@ -90,6 +91,14 @@ function home() {
              <span class="tile-count">${s.units.length} games</span>
            </button>`).join('')}
     </section>
+    <section class="mix-row">
+      <button class="mix-btn surprise" data-go="#/surprise">
+        <span class="mix-emoji">🎲</span><span><b>Surprise me!</b><small>A mix of all your games</small></span>
+      </button>
+      ${store.tricky().length
+        ? `<button class="mix-btn tricky" data-go="#/tricky"><span class="mix-emoji">🧠</span><span><b>Tricky ones</b><small>${store.tricky().length} to beat</small></span></button>`
+        : '<div class="mix-btn tricky off"><span class="mix-emoji">🧠</span><span><b>Tricky ones</b><small>None yet — great job!</small></span></div>'}
+    </section>
     <nav class="bottom-nav">
       <button class="nav-btn" data-go="#/stickers"><span class="nav-emoji">📒</span>Stickers</button>
       <button class="nav-btn" data-go="#/settings"><span class="nav-emoji">⚙️</span>Settings</button>
@@ -169,6 +178,18 @@ function play(subjectId, unitId, levelId) {
       if (location.hash === h) play(subjectId, unitId, lv);
       else location.hash = h;
     },
+  });
+}
+
+function playMix(kind) {
+  setTheme('home');
+  const unit = kind === 'tricky' ? trickyUnit() : surpriseUnit();
+  if (kind === 'tricky' && !unit.count) return home();
+  runRound({
+    root: app, subjectId: 'mix', unit, levelId: 'medium', mixed: true,
+    length: kind === 'tricky' ? unit.count : undefined,
+    onQuit: () => { location.hash = '#/'; },
+    onPlay: () => { if (location.hash === `#/${kind}`) playMix(kind); else location.hash = `#/${kind}`; },
   });
 }
 
@@ -309,6 +330,7 @@ function route() {
   if (a === 'settings') return settingsScreen();
   if (a === 'grownups') return grownups();
   if (a === 'who') return whoScreen();
+  if (a === 'surprise' || a === 'tricky') return playMix(a);
   return home();
 }
 
