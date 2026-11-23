@@ -57,7 +57,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay }) {
     dots.forEach((d, i) => d.classList.toggle('current', i === idx));
     render();
     window.scrollTo({ top: 0 });
-    if (store.settings().autoRead) setTimeout(() => alive() && speakQuestion(), 250);
+    if (store.settings().autoRead || q.listen) setTimeout(() => alive() && speakQuestion(), 250);
   }
 
   function render() {

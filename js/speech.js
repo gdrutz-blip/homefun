@@ -29,13 +29,21 @@ function voiceFor(lang) {
 }
 
 // Emoji get read out as their names ("ice cream emoji") — strip them.
+// "count by 2s" should be read "count by twos", not "count by 2 S".
+const PLURAL_NUMS = {
+  2: 'twos', 3: 'threes', 4: 'fours', 5: 'fives', 6: 'sixes', 10: 'tens',
+  20: 'twenties', 25: 'twenty-fives', 50: 'fifties', 100: 'hundreds',
+};
+
 function clean(text, lang = 'en') {
+  const fr = lang.startsWith('fr');
   return String(text)
+    .replace(/\b(\d+)'?s\b/g, (m, n) => (!fr && PLURAL_NUMS[n]) || m)
     .replace(/<[^>]*>/g, ' ')
     .replace(/\p{Extended_Pictographic}/gu, '')
     .replace(/[\u{1F1E6}-\u{1F1FF}️‍]/gu, '')
-    .replace(/−/g, lang.startsWith('fr') ? ' moins ' : ' minus ')
-    .replace(/×/g, lang.startsWith('fr') ? ' fois ' : ' times ')
+    .replace(/−/g, fr ? ' moins ' : ' minus ')
+    .replace(/×/g, fr ? ' fois ' : ' times ')
     .replace(/\s+/g, ' ')
     .trim();
 }

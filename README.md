@@ -12,8 +12,29 @@ Fun review games for an Ontario Grade 2 student (French Immersion). They're buil
 | 🧙‍♀️ Potion Class | 2D shapes | Name the shapes | Sides & vertices, rotated shapes | Riddles, wobbly (irregular) shapes, quadrilaterals |
 | 🤸‍♀️ Gymnastics Meet | 3D shapes | Name solids, real-world objects | Roll/stack, faces, face shapes | Edges, vertices, riddles |
 
+**Science**
+
+| Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
+|---|---|---|---|---|
+| 🐣 Gemma's Animal Book | Growth & changes in animals | Baby animal names, eggs vs. born alive | Life cycles, fur/feathers/scales | Herbivore/carnivore/omnivore, animal needs |
+| 🍫 Mia's Chocolate Kitchen | Solids & liquids | Solid or liquid? | Melting, freezing, pouring | Sink/float, dissolving |
+
+**Social Studies**
+
+| Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
+|---|---|---|---|---|
+| 🗺️ World Tour | Maps & global communities | N/S/E/W on a grid map | Routes, the 7 continents | Oceans, map legends, equator & poles |
+| 🎉 Family Celebrations | Traditions | Match celebrations to symbols | Seasons and months | Family tree words, then & now |
+
+**Français** (always in French)
+
+| Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
+|---|---|---|---|---|
+| 🎮 Super Mots | Vocabulary | Picture ↔ word, colours | un/une, le/la | Odd one out, missing letters |
+| 🥞 Le café des crêpes | Numbers | Hear/read 0–20 | 20–69 | 60–100 (soixante-dix, quatre-vingts…) |
+
 How it works:
-- **English / Français switch:** at the top of the Math screen (also in ⚙️ Settings). Every math game, hint, praise message and the read-aloud voice switches to French. Stars are shared between the two languages.
+- **English / Français switch:** at the top of the Math, Science and Social Studies screens (also in ⚙️ Settings). Every game, hint, praise message and the read-aloud voice switches to French. Stars are shared between the two languages.
 - **Read-aloud:** the 🔊 button reads any question, hint or menu. Under ⚙️ Settings you can turn on automatic reading and a slower voice. It uses the phone's built-in voice, which works offline.
 - **Rounds:** each round has 8 questions. A wrong answer brings up a hint with a picture (base-ten blocks, crossed-out items, numbered corners). A second wrong answer shows her the right one. No timers.
 - **Rewards:** she earns 1–3 stars per round and stickers for her Sticker Book.

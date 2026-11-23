@@ -4,15 +4,22 @@ import subtracting from './units/math/subtracting.js';
 import skipcount from './units/math/skipcount.js';
 import shapes2d from './units/math/shapes2d.js';
 import shapes3d from './units/math/shapes3d.js';
+import animals from './units/science/animals.js';
+import matter from './units/science/matter.js';
+import map from './units/social/map.js';
+import traditions from './units/social/traditions.js';
+import mots from './units/french/mots.js';
+import nombres from './units/french/nombres.js';
 
 export const SUBJECTS = [
   {
     id: 'math', name: 'Math', frName: 'Les maths', emoji: '🔢', color: '#ff7a59', bilingual: true,
     units: [adding, subtracting, skipcount, shapes2d, shapes3d],
   },
-  { id: 'french', name: 'Français', emoji: '🥐', color: '#3d7bfd', comingSoon: true, units: [] },
-  { id: 'science', name: 'Science', emoji: '🔬', color: '#2bb5a0', comingSoon: true, units: [] },
-  { id: 'social', name: 'Social Studies', emoji: '🌎', color: '#ffb020', comingSoon: true, units: [] },
+  // Always in French (it's French practice!).
+  { id: 'french', name: 'Français', frName: 'Français', emoji: '🥐', color: '#3d7bfd', forceLang: 'fr', units: [mots, nombres] },
+  { id: 'science', name: 'Science', frName: 'Les sciences', emoji: '🔬', color: '#2bb5a0', bilingual: true, units: [animals, matter] },
+  { id: 'social', name: 'Social Studies', frName: 'Études sociales', emoji: '🌎', color: '#ffb020', bilingual: true, units: [map, traditions] },
 ];
 
 export const findSubject = (id) => SUBJECTS.find((s) => s.id === id);

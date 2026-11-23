@@ -1,7 +1,10 @@
 // Language switch for the games ("Math in English" / "Les maths en français").
 import { store } from './storage.js';
 
-export const isFr = () => store.settings().lang === 'fr';
+// A subject can force a language (the Français subject is always in French).
+let forced = null;
+export const forceLang = (lang) => { forced = lang; };
+export const isFr = () => (forced ? forced === 'fr' : store.settings().lang === 'fr');
 /** Pick the English or French version of a string. */
 export const L = (en, fr) => (isFr() ? fr : en);
 /** Speech voice for the current language. */

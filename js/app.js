@@ -7,7 +7,7 @@ import { runRound } from './engine.js';
 import { FAMILY } from './config.js';
 import { STICKERS } from './stickers.js';
 import { esc } from './util.js';
-import { L, isFr, voiceLang } from './i18n.js';
+import { L, isFr, voiceLang, forceLang } from './i18n.js';
 
 const app = document.getElementById('app');
 const K = FAMILY.kid;
@@ -174,7 +174,7 @@ function settingsScreen() {
       ${toggle('sound', 'Sound effects', '🔔')}
       <button class="setting ${isFr() ? 'on' : ''}" data-lang-toggle>
         <span class="setting-emoji">🇫🇷</span>
-        <span class="setting-label">Math games in French</span>
+        <span class="setting-label">Math, Science &amp; Social Studies in French</span>
         <span class="switch"><span></span></span>
       </button>
       <button class="btn primary wide" data-test-voice>🔊 Test the voice</button>
@@ -258,6 +258,8 @@ function route() {
   speech.stop();
   window.scrollTo({ top: 0 });
   const [a, b, c, d] = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  // The Français subject is always in French; everything else follows the switch.
+  forceLang((a === 's' || a === 'play') ? (findSubject(b)?.forceLang || null) : null);
   if (a === 's' && b && c) return levelScreen(b, c);
   if (a === 's' && b) return subjectScreen(b);
   if (a === 'play') return play(b, c, d);

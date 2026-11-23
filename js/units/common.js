@@ -48,6 +48,17 @@ export function wordQ({ options, ...q }) {
   };
 }
 
+/** Choices are big emoji pictures. options: [{ value, e, say? }] */
+export function emojiQ({ options, ...q }) {
+  return {
+    ...q,
+    plain: q.plain || stripTags(q.text),
+    type: 'choice',
+    choiceStyle: 'visual',
+    choices: options.map((o) => ({ label: `<span class="big-emoji">${o.e}</span>`, value: o.value, say: o.say })),
+  };
+}
+
 export function visualQ({ options, ...q }) {
   // options: [{ value, html }]
   return {

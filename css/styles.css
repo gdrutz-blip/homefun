@@ -20,6 +20,12 @@ body[data-theme="gemma"]    { --accent: #1fa592; --accent-dark: #127a6b; --bg1: 
 body[data-theme="band"]     { --accent: #2f6fed; --accent-dark: #1c48b0; --bg1: #e3ecff; --bg2: #cfdcff; }
 body[data-theme="wizard"]   { --accent: #7b4dff; --accent-dark: #5530d6; --bg1: #efe8ff; --bg2: #e1f0ff; }
 body[data-theme="gym"]      { --accent: #ff7a1a; --accent-dark: #c95500; --bg1: #fff2e0; --bg2: #ffe3f1; }
+body[data-theme="animals"]  { --accent: #3f9c46; --accent-dark: #2a6f30; --bg1: #eaf8e4; --bg2: #fff6d6; }
+body[data-theme="kitchen"]  { --accent: #8d5524; --accent-dark: #5e3714; --bg1: #fbefe3; --bg2: #ffe0ea; }
+body[data-theme="map"]      { --accent: #1e88e5; --accent-dark: #125ea3; --bg1: #e2f3ff; --bg2: #e8fbe9; }
+body[data-theme="party"]    { --accent: #e91e63; --accent-dark: #a3124a; --bg1: #fff0f6; --bg2: #fff7d6; }
+body[data-theme="console"]  { --accent: #e4000f; --accent-dark: #9e000a; --bg1: #ffe9ea; --bg2: #e6f0ff; }
+body[data-theme="crepe"]    { --accent: #a0522d; --accent-dark: #6d3519; --bg1: #fff4e3; --bg2: #ffe8f0; }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { -webkit-text-size-adjust: 100%; }
@@ -69,6 +75,8 @@ h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.15; }
   background: #ffd84d; box-shadow: 0 4px 0 #d6a800; font-size: 1.5rem;
   display: grid; place-items: center;
 }
+.speak.huge { width: 116px; height: 116px; font-size: 3.4rem; box-shadow: 0 6px 0 #d6a800; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.06); } }
 .speak.small { width: 42px; height: 42px; font-size: 1.15rem; box-shadow: 0 3px 0 #d6a800; }
 .speak:active { transform: translateY(3px); box-shadow: none; }
 
@@ -343,6 +351,29 @@ h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.15; }
 .parent summary { cursor: pointer; font-weight: 700; color: var(--accent-dark); }
 .parent ul { padding-left: 18px; margin: 6px 0; }
 .missed li { margin-bottom: 4px; }
+
+/* ---------- science / social / french pictures ---------- */
+.big-emoji { font-size: 4.2rem; line-height: 1.1; display: inline-block; }
+.vcard .big-emoji { font-size: 5rem; padding: 0 18px; }
+.choices.visual .choice .big-emoji { font-size: 3.4rem; }
+.seq.words .seq-box { flex-direction: column; font-size: 1.7rem; min-width: 64px; height: auto; padding: 6px; display: flex; align-items: center; }
+.seq.words .seq-box small { font-family: var(--font); font-size: .7rem; font-weight: 400; }
+.seq.words .jump { font-size: 1rem; }
+.num-word { font-size: 1.9rem; display: inline-block; line-height: 1.2; }
+.spell { font-family: var(--display); font-size: 1.6rem; letter-spacing: .18em; color: var(--accent-dark); white-space: nowrap; }
+
+.gridmap {
+  display: grid; grid-template-columns: 28px auto 28px; grid-template-rows: auto auto auto;
+  align-items: center; justify-items: center; gap: 4px; background: #fff; padding: 10px; border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.gm-n { grid-column: 2; grid-row: 1; font-weight: 700; color: var(--accent-dark); }
+.gm-w { grid-column: 1; grid-row: 2; font-weight: 700; color: var(--accent-dark); }
+.gm-grid { grid-column: 2; grid-row: 2; display: grid; grid-template-columns: repeat(4, 54px); grid-auto-rows: 54px; gap: 3px;
+  background: #cfe8c6; border: 3px solid #7cb36e; border-radius: 10px; padding: 3px; }
+.gm-e { grid-column: 3; grid-row: 2; font-weight: 700; color: var(--accent-dark); }
+.gm-s { grid-column: 2; grid-row: 3; font-weight: 700; color: var(--accent-dark); }
+.gm-cell { background: #eaf7e4; border-radius: 6px; display: grid; place-items: center; font-size: 1.9rem; }
+.gm-cell.hl { background: #fff3b0; box-shadow: inset 0 0 0 3px #ffb400; }
 
 #confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; display: none; z-index: 30; }
 
