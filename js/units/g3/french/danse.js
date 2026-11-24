@@ -40,7 +40,7 @@ function verbQ(verbs, persons) {
     options: shuffle([right, ...wrong]),
     answer: right,
     hint: {
-      text: `${v} : je ${VERBS[v].je}, tu ${VERBS[v].tu}, il/elle ${VERBS[v].il}, nous ${VERBS[v].nous}, vous ${VERBS[v].vous}, ils/elles ${VERBS[v].ils}. Ici, c’est « ${PERSON_HINT[subj.p]} ».`,
+      text: `${v} : ${/^[aeiouhéè]/.test(VERBS[v].je) ? 'j’' : 'je '}${VERBS[v].je}, tu ${VERBS[v].tu}, il/elle ${VERBS[v].il}, nous ${VERBS[v].nous}, vous ${VERBS[v].vous}, ils/elles ${VERBS[v].ils}. Ici, c’est « ${PERSON_HINT[subj.p]} ».`,
       say: `Avec ${PERSON_HINT[subj.p]}, on dit ${right}.`,
     },
   });

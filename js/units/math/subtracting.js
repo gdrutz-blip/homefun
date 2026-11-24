@@ -85,12 +85,12 @@ function placeValueHint(a, b) {
   }
   return {
     text: L(
-      `Take away the tens: ${ta} − ${tb} = ${ta - tb} tens. Take away the ones: ${oa} − ${ob} = ${oa - ob}.`,
-      `Enlève les dizaines : ${ta} − ${tb} = ${ta - tb} dizaines. Enlève les unités : ${oa} − ${ob} = ${oa - ob}.`,
+      `Take away the tens: ${ta} − ${tb} = ${ta - tb} ${ta - tb === 1 ? 'ten' : 'tens'}. Take away the ones: ${oa} − ${ob} = ${oa - ob}.`,
+      `Enlève les dizaines : ${ta} − ${tb} = ${ta - tb} ${ta - tb === 1 ? 'dizaine' : 'dizaines'}. Enlève les unités : ${oa} − ${ob} = ${oa - ob}.`,
     ),
     say: L(
-      `Take away the tens: ${ta} minus ${tb} is ${ta - tb} tens. Take away the ones: ${oa} minus ${ob} is ${oa - ob}.`,
-      `Enlève les dizaines : ${ta} moins ${tb} égale ${ta - tb} dizaines. Enlève les unités : ${oa} moins ${ob} égale ${oa - ob}.`,
+      `Take away the tens: ${ta} minus ${tb} is ${ta - tb} ${ta - tb === 1 ? 'ten' : 'tens'}. Take away the ones: ${oa} minus ${ob} is ${oa - ob}.`,
+      `Enlève les dizaines : ${ta} moins ${tb} égale ${ta - tb} ${ta - tb === 1 ? 'dizaine' : 'dizaines'}. Enlève les unités : ${oa} moins ${ob} égale ${oa - ob}.`,
     ),
     visual: card(baseTen(a)),
   };

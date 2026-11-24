@@ -3,7 +3,7 @@ import { pick, sample, shuffle } from '../../util.js';
 import { wordQ, emojiQ } from '../common.js';
 import { sequence, card } from '../../visuals.js';
 import { FAMILY } from '../../config.js';
-import { L } from '../../i18n.js';
+import { L, aAn } from '../../i18n.js';
 
 const { kid: M, baby: G } = FAMILY;
 
@@ -38,6 +38,7 @@ const A = {
   wolf: { e: '🐺', n: ['wolf', 'loup'], f: "le loup" },
   bee: { e: '🐝', n: ['bee', 'abeille'], f: "l'abeille" },
 };
+const cap1 = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 const name = (k) => L(...A[k].n);
 const babyName = (k) => L(...A[k].baby);
 /** French with article: "la vache", "l'ours". */
@@ -80,7 +81,7 @@ function babyOf() {
   const others = shuffle(WITH_BABIES).filter((x) => !seenNames.has(babyName(x)) && seenNames.add(babyName(x))).slice(0, 2);
   return wordQ({
     key: `baby-${k}`, badge: pick(BADGES()),
-    text: L(`${G} sees a ${name(k)}. What is a baby ${name(k)} called?`, `Comment s'appelle le bébé ${du(k)}?`),
+    text: L(`${G} sees ${aAn(name(k))}. What is a baby ${name(k)} called?`, `Comment s'appelle le bébé ${du(k)}?`),
     visual: card(`<span class="big-emoji">${A[k].e}</span>`),
     options: shuffle([k, ...others]).map((x) => ({ value: babyName(x), label: babyName(x) })),
     answer: babyName(k),
@@ -111,7 +112,7 @@ function covering() {
   const k = pick(COVER[c].who);
   return wordQ({
     key: `cover-${k}`, badge: pick(BADGES()),
-    text: L(`What covers a ${name(k)}'s body?`, `Qu'est-ce qui couvre le corps ${du(k)}?`),
+    text: L(`What covers ${aAn(name(k))}'s body?`, `Qu'est-ce qui couvre le corps ${du(k)}?`),
     visual: card(`<span class="big-emoji">${A[k].e}</span>`),
     options: Object.keys(COVER).map((x) => ({ value: x, label: L(...COVER[x].n) })),
     answer: c,
@@ -147,8 +148,8 @@ function diet() {
   return wordQ({
     key: `diet-${k}-${askWord}`, badge: L('🍽️ Dinner time!', '🍽️ L’heure du repas!'),
     text: askWord
-      ? L(`A ${name(k)} eats ${L(...DIET[d].n)}. What kind of eater is it?`, `${Cap(le(k))} mange ${L(...DIET[d].n)}. Quel genre de mangeur est-ce?`)
-      : L(`What does a ${name(k)} eat?`, `Que mange ${le(k)}?`),
+      ? L(`${cap1(aAn(name(k)))} eats ${L(...DIET[d].n)}. What kind of eater is it?`, `${Cap(le(k))} mange ${L(...DIET[d].n)}. Quel genre de mangeur est-ce?`)
+      : L(`What does ${aAn(name(k))} eat?`, `Que mange ${le(k)}?`),
     visual: card(`<span class="big-emoji">${A[k].e}</span>`),
     options: Object.keys(DIET).map((x) => ({ value: x, label: askWord ? L(...DIET[x].word) : L(...DIET[x].n) })),
     answer: d,

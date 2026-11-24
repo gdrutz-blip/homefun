@@ -24,13 +24,13 @@ function areaCount(maxW, maxH, mode) {
 function perimQ(maxW, maxH, mode, grid) {
   const w = rand(2, maxW), h = rand(2, maxH);
   const place = pick([
-    [L('the cottage garden', 'le jardin du chalet'), L('fence', 'clôture')],
-    [L('a picture frame', 'un cadre'), L('ribbon', 'ruban')],
-    [L('her bedroom floor', 'le plancher de sa chambre'), L('baseboard', 'plinthe')],
+    [L('the cottage garden', 'du jardin du chalet'), L('a fence', 'une clôture')],
+    [L('a picture frame', 'd’un cadre'), L('a ribbon', 'un ruban')],
+    [L('her bedroom floor', 'du plancher de sa chambre'), L('baseboard', 'une plinthe')],
   ]);
   return numberQ({
     key: `p-${w}x${h}-${place[0]}`, badge: pick(BADGES()),
-    text: L(`${F} wants to put ${place[1]} all the way around ${place[0]}. How long must it be? (perimeter)`, `${F} veut mettre une ${place[1]} tout autour de ${place[0]}. Quelle longueur faut-il? (périmètre)`),
+    text: L(`${F} wants to put ${place[1]} all the way around ${place[0]}. How long must it be? (perimeter)`, `${F} veut mettre ${place[1]} tout autour ${place[0]}. Quelle longueur faut-il? (périmètre)`),
     visual: card(rectSVG(w, h, { grid, all4: true, unit: 'm' })),
     answer: 2 * (w + h), mode, max: 60, min: 4, near: [w, h, 2, -2, w + h],
     hint: { text: L(`Perimeter is the distance around. Add all 4 sides: ${w} + ${h} + ${w} + ${h}.`, `Le périmètre est la distance autour. Additionne les 4 côtés : ${w} + ${h} + ${w} + ${h}.`) },
@@ -54,7 +54,7 @@ function missingSide(mode) {
   const P = 2 * (w + h);
   return numberQ({
     key: `ms-${w}-${h}`, badge: L('🔍 Missing side!', '🔍 Côté manquant!'),
-    text: L(`A rectangle garden has a perimeter of ${P} m. One side is ${w} m long. How long is the next side?`, `Un jardin rectangulaire a un périmètre de ${P} m. Un côté mesure ${w} m. Combien mesure le côté suivant?`),
+    text: L(`A rectangular garden has a perimeter of ${P} m. One side is ${w} m long. How long is the next side?`, `Un jardin rectangulaire a un périmètre de ${P} m. Un côté mesure ${w} m. Combien mesure le côté suivant?`),
     answer: h, mode, max: 20, min: 1, near: [1, -1, 2, -2, w],
     hint: { text: L(`Two sides of ${w} make ${2 * w}. ${P} − ${2 * w} = ${P - 2 * w}, and that is two equal sides. Half of it is ${h}.`, `Deux côtés de ${w} font ${2 * w}. ${P} − ${2 * w} = ${P - 2 * w}, ce sont deux côtés égaux. La moitié donne ${h}.`) },
   });

@@ -15,9 +15,9 @@ const CAP = () => [ // [emoji, thing, unit]
   ['🧃', L('a small juice box', 'une petite boîte de jus'), 'mL'], ['🪣', L('a bucket of water', 'un seau d’eau'), 'L'],
 ];
 const MASS = () => [
-  ['🥚', L('an egg', 'un œuf'), 'g'], ['🌭', L('a sausage', 'une saucisse'), 'g'],
-  ['🥣', L('a bowl of Cheerios', 'un bol de céréales'), 'g'], ['🌾', L('a big bag of flour', 'un gros sac de farine'), 'kg'],
-  ['👶', L(`baby ${G}`, `bébé ${G}`), 'kg'], ['🐶', L('a puppy', 'un chiot'), 'kg'],
+  ['🥚', L('an egg', 'd’un œuf'), 'g'], ['🌭', L('a sausage', 'd’une saucisse'), 'g'],
+  ['🥣', L('a bowl of Cheerios', 'd’un bol de céréales'), 'g'], ['🌾', L('a big bag of flour', 'd’un gros sac de farine'), 'kg'],
+  ['👶', L(`baby ${G}`, `de bébé ${G}`), 'kg'], ['🐶', L('a puppy', 'd’un chiot'), 'kg'],
 ];
 
 function unitQ() {
@@ -26,7 +26,7 @@ function unitQ() {
   const opts = cap ? ['mL', 'L'] : ['g', 'kg'];
   return wordQ({
     key: `u-${e}`, badge: pick(BADGES()),
-    text: cap ? L(`Which unit would you use to measure how much ${thing} holds?`, `Quelle unité utiliserais-tu pour mesurer la quantité dans ${thing}?`) : L(`Which unit would you use to measure the mass of ${thing}?`, `Quelle unité utiliserais-tu pour mesurer la masse de ${thing}?`),
+    text: cap ? L(`Which unit would you use to measure how much ${thing} holds?`, `Quelle unité utiliserais-tu pour mesurer la quantité dans ${thing}?`) : L(`Which unit would you use to measure the mass of ${thing}?`, `Quelle unité utiliserais-tu pour mesurer la masse ${thing}?`),
     visual: card(`<span class="big-emoji">${e}</span>`),
     options: opts.map((o) => ({ value: o, label: cap ? (o === 'mL' ? L('millilitres (mL)', 'millilitres (mL)') : L('litres (L)', 'litres (L)')) : (o === 'g' ? L('grams (g)', 'grammes (g)') : L('kilograms (kg)', 'kilogrammes (kg)')) })),
     answer: u,

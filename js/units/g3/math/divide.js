@@ -39,7 +39,7 @@ function groupsQ(size, groups, mode) {
   const text = L(`${F} has ${total} ${en}. She puts ${size} in each snack bag. How many bags can she fill?`,
     `${F} a ${total} ${fr}. Elle en met ${size} dans chaque sac. Combien de sacs peut-elle remplir?`);
   return numberQ({
-    key: `dg-${total}-${size}`, badge: '🛍️ Snack bags!', text, big: eq(total, size), say: `${text} ${sayEq(total, size)}`,
+    key: `dg-${total}-${size}`, badge: L('🛍️ Snack bags!', '🛍️ Les sacs de collation!'), text, big: eq(total, size), say: `${text} ${sayEq(total, size)}`,
     visual: total <= 24 ? emojiGroup(e, total) : '',
     answer: groups, mode, min: 1, max: 20, near: [1, -1, 2, -2],
     hint: { text: L(`Count by ${size}s up to ${total}. Each jump is one bag.`, `Compte par bonds de ${size} jusqu'à ${total}. Chaque bond est un sac.`) },

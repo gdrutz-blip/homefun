@@ -1,5 +1,5 @@
 // GRADE 2 — NUMBERS TO 200: Mia's Build-It Workshop 🔧 / L'atelier de bricolage de Mia
-import { rand, pick, sample, QBOX } from '../../util.js';
+import { rand, pick, sample, pl, QBOX } from '../../util.js';
 import { numberQ, wordQ } from '../common.js';
 import { baseTen, sequence } from '../../visuals.js';
 import { pvChart } from '../../visuals3.js';
@@ -13,8 +13,8 @@ const THINGS = () => L(['a bookshelf', 'a toy box', 'a desk', 'a bunk bed', 'a l
 function tensOnesQ(mode, max) {
   const n = rand(21, max);
   const t = Math.floor(n / 10), o = n % 10;
-  const text = L(`${M} is building ${pick(THINGS())}. She has ${t} bags of 10 screws and ${o} loose screws. How many screws?`,
-    `${M} monte ${pick(THINGS())}. Elle a ${t} sacs de 10 vis et ${o} vis toutes seules. Combien de vis?`);
+  const text = L(`${M} is building ${pick(THINGS())}. She has ${pl(t, 'bag', 'bags')} of 10 screws and ${pl(o, 'loose screw', 'loose screws')}. How many screws?`,
+    `${M} monte ${pick(THINGS())}. Elle a ${pl(t, 'sac', 'sacs')} de 10 vis et ${pl(o, 'vis toute seule', 'vis toutes seules')}. Combien de vis?`);
   return numberQ({
     key: `to-${n}`, badge: pick(BADGES()), text, visual: n <= 99 ? baseTen(n, { label: false }) : pvChart(n),
     answer: n, mode, max: 200, near: [10, -10, 1, -1],
@@ -32,7 +32,7 @@ function beforeAfterQ(max) {
       : L(`What number is BETWEEN ${n - 1} and ${n + 1}?`, `Quel nombre est ENTRE ${n - 1} et ${n + 1}?`);
   return numberQ({
     key: `ba-${kind}-${n}`, badge: L('🔢 Number line!', '🔢 Droite numérique!'), text,
-    big: seq.join(' , '), answer: ans, max: 200, near: [1, -1, 10, -10, 2],
+    big: seq.join(', '), answer: ans, max: 200, near: [1, -1, 10, -10, 2],
     hint: { text: L('Count forward by 1 for after. Count back by 1 for before.', 'Compte 1 de plus pour après. Compte 1 de moins pour avant.') },
   });
 }
@@ -81,8 +81,8 @@ function orderQ(max) {
 
 function hundredsQ(mode) {
   const n = rand(100, 199);
-  const text = L(`${M} has 1 big box of 100 screws, ${Math.floor((n % 100) / 10)} bags of 10, and ${n % 10} loose screws. How many?`,
-    `${M} a 1 grosse boîte de 100 vis, ${Math.floor((n % 100) / 10)} sacs de 10 et ${n % 10} vis seules. Combien?`);
+  const text = L(`${M} has 1 big box of 100 screws, ${pl(Math.floor((n % 100) / 10), 'bag', 'bags')} of 10, and ${pl(n % 10, 'loose screw', 'loose screws')}. How many?`,
+    `${M} a 1 grosse boîte de 100 vis, ${pl(Math.floor((n % 100) / 10), 'sac', 'sacs')} de 10 et ${pl(n % 10, 'vis seule', 'vis seules')}. Combien?`);
   return numberQ({
     key: `h-${n}`, badge: pick(BADGES()), text, visual: pvChart(n),
     answer: n, mode, max: 200, near: [10, -10, 1, -1, 100, -100],

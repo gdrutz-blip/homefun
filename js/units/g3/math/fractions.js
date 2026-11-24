@@ -1,5 +1,5 @@
 // GRADE 3 — FRACTIONS: Pizza Night at Uncle Aaron's Cottage 🍕 / Soirée pizza au chalet
-import { rand, pick, sample, shuffle } from '../../../util.js';
+import { rand, pick, sample, shuffle, pl } from '../../../util.js';
 import { wordQ, visualQ, numberQ } from '../../common.js';
 import { pie, bar, frac, fracWords } from '../../../visuals3.js';
 import { card } from '../../../visuals.js';
@@ -112,7 +112,7 @@ function leftQ() {
       visual: card(pie(n, left)),
       options: fracChoices(shuffle(opts.slice(0, 3))),
       answer: `${left}/${n}`,
-      hint: { text: L(`${n} − ${eaten} = ${left} slices left, out of ${n}.`, `${n} − ${eaten} = ${left} pointes restent, sur ${n}.`) },
+      hint: { text: L(`${n} − ${eaten} = ${pl(left, 'slice', 'slices')} left, out of ${n}.`, `${n} − ${eaten} = ${pl(left, 'pointe reste', 'pointes restent')}, sur ${n}.`) },
     }),
     choiceStyle: 'num',
   };

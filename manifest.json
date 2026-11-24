@@ -1,7 +1,7 @@
 {
   "name": "Family Review Games",
   "short_name": "Review Games",
-  "description": "Fun Grade 2 review games.",
+  "description": "Fun review games for Grade 2 and Grade 3.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

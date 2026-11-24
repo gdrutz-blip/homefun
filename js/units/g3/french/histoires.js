@@ -46,7 +46,7 @@ const STORIES = [
   },
   {
     id: 'velo', d: '🚲🌧️',
-    t: `${F} et ${M} font du vélo sur le sentier près du chalet. Soudain, il commence à pleuvoir. Elles se dépêchent de rentrer. ${uncleFr.replace('oncle', 'Oncle')} leur donne des serviettes et du chocolat chaud. Dehors, la pluie tombe fort, mais à l’intérieur, il fait bon.`,
+    t: `${F} et ${M} font du vélo sur le sentier près du chalet. Soudain, il commence à pleuvoir. Elles se dépêchent de rentrer. Oncle Aaron leur donne des serviettes et du chocolat chaud. Dehors, la pluie tombe fort, mais à l’intérieur, il fait bon.`,
     qs: [
       { k: 'lit', q: 'Où font-elles du vélo?', a: 'Sur le sentier près du chalet', o: ['Dans le parc', 'Dans la ville'] },
       { k: 'lit', q: 'Qu’est-ce qui arrive soudainement?', a: 'Il commence à pleuvoir', o: ['Il commence à neiger', 'Un chien apparaît'] },

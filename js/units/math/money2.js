@@ -8,9 +8,9 @@ import { L } from '../../i18n.js';
 const { kid: M, bigSister: F, baby: G } = FAMILY;
 const BADGES = () => L(['🫧 Slime shop!', '✨ Glitter time!', '🧪 Mix it up!', '🟣 Squishy!'], ['🫧 Boutique de slime!', '✨ Des paillettes!', '🧪 On mélange!', '🟣 Tout mou!']);
 const STUFF = () => [
-  { e: '🫧', n: L('a tub of slime', 'un pot de slime') }, { e: '✨', n: L('a pack of glitter', 'des paillettes') },
+  { e: '🫧', n: L('a tub of slime', 'un pot de slime') }, { e: '✨', n: L('a pack of glitter', 'un paquet de paillettes') },
   { e: '🧴', n: L('a bottle of glue', 'une bouteille de colle') }, { e: '🟣', n: L('a ball of play dough', 'une boule de pâte à modeler') },
-  { e: '⭐', n: L('a sticker', 'un autocollant') }, { e: '🎨', n: L('some paint', 'de la peinture') },
+  { e: '⭐', n: L('a sticker', 'un autocollant') }, { e: '🎨', n: L('a tube of paint', 'un tube de peinture') },
 ];
 const Cap = (w) => w.charAt(0).toUpperCase() + w.slice(1);
 const NAMES = () => ({

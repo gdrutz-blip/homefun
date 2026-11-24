@@ -13,7 +13,7 @@ export const FAMILY3 = {
   baby: 'Gemma',
   cousins: ['Lorelai', 'Landon', 'Sylvia'],
   uncle: 'Uncle Aaron',
-  uncleFr: 'oncle Aaron',
+  uncleFr: 'l’oncle Aaron',
 };
 
 // Questions per round. Short rounds suit a phone and a seven-year-old's attention.

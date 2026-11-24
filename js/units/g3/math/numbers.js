@@ -1,5 +1,5 @@
 // GRADE 3 — NUMBERS TO 1000: Gummy Worm Factory 🏭 / L'usine de jujubes
-import { rand, pick, shuffle, QBOX } from '../../../util.js';
+import { rand, pick, shuffle, pl, QBOX } from '../../../util.js';
 import { numberQ, wordQ } from '../../common.js';
 import { pvChart, blocks3 } from '../../../visuals3.js';
 import { sequence } from '../../../visuals.js';
@@ -13,8 +13,8 @@ const PACK = () => L('Gummy worms come in boxes of 100, bags of 10, and single w
 function buildQ(mode) {
   const h = rand(1, 9), t = rand(0, 9), o = rand(0, 9);
   const n = h * 100 + t * 10 + o;
-  const text = L(`The factory packed ${h} boxes of 100, ${t} bags of 10, and ${o} single worms. How many worms?`,
-    `L'usine a emballé ${h} boîtes de 100, ${t} sacs de 10 et ${o} vers seuls. Combien de vers?`);
+  const text = L(`The factory packed ${pl(h, 'box', 'boxes')} of 100, ${pl(t, 'bag', 'bags')} of 10, and ${pl(o, 'single worm', 'single worms')}. How many worms?`,
+    `L'usine a emballé ${pl(h, 'boîte', 'boîtes')} de 100, ${pl(t, 'sac', 'sacs')} de 10 et ${pl(o, 'ver seul', 'vers seuls')}. Combien de vers?`);
   return numberQ({
     key: `build-${n}`, badge: pick(BADGES()), text, visual: pvChart(n), answer: n, mode, max: 999,
     near: [100, -100, 10, -10, 1, -1],
@@ -31,7 +31,7 @@ function digitValueQ() {
   const opts = shuffle([...new Set([value, d, d * 10, d * 100])]).slice(0, 3);
   if (!opts.includes(value)) opts[0] = value;
   return wordQ({
-    key: `dv-${n}-${pos}`, badge: '🔍 Digit detective!',
+    key: `dv-${n}-${pos}`, badge: L('🔍 Digit detective!', '🔍 Détective des chiffres!'),
     text: L(`In the number ${n}, what is the ${d} worth?`, `Dans le nombre ${n}, que vaut le ${d}?`),
     big: String(n).split('').map((c, i) => (i === pos ? `<u>${c}</u>` : c)).join(''),
     options: shuffle(opts).map((v) => ({ value: v, label: String(v) })),
@@ -68,7 +68,7 @@ function skipQ(mode) {
   const items = Array.from({ length: len }, (_, k) => start + (back ? -by : by) * k);
   const blank = rand(1, len - 1);
   return numberQ({
-    key: `sk-${start}-${by}-${back}`, badge: '🚚 Delivery truck!',
+    key: `sk-${start}-${by}-${back}`, badge: L('🚚 Delivery truck!', '🚚 Le camion de livraison!'),
     text: L(`The truck counts ${back ? 'back ' : ''}by ${by}s. What number is missing?`, `Le camion compte ${back ? 'à rebours ' : ''}par bonds de ${by}. Quel nombre manque?`),
     say: L(`Count ${back ? 'back ' : ''}by ${by}s: ${items.map((v, k) => (k === blank ? 'blank' : v)).join(', ')}. What number is missing?`,
       `Compte ${back ? 'à rebours ' : ''}par bonds de ${by} : ${items.map((v, k) => (k === blank ? 'trou' : v)).join(', ')}. Quel nombre manque?`),
@@ -85,7 +85,7 @@ function expandedQ(mode) {
   const parts = { h: h * 100, t: t * 10, o };
   const big = ['h', 't', 'o'].map((k) => (k === hide ? QBOX : parts[k])).join(' + ') + ` = ${n}`;
   return numberQ({
-    key: `ex-${n}-${hide}`, badge: '📦 Unpack it!',
+    key: `ex-${n}-${hide}`, badge: L('📦 Unpack it!', '📦 On déballe!'),
     text: L('Fill in the missing part.', 'Trouve la partie manquante.'),
     big, say: L(`${big.replace(QBOX, 'what')}`, `${big.replace(QBOX, 'combien')}`),
     answer: parts[hide], mode, max: 999, near: [hide === 'o' ? 1 : 10, hide === 'h' ? 100 : 10, -1, -10],

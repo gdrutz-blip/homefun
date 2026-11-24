@@ -31,7 +31,7 @@ function arrayQ(a, b, mode) {
   const text = L(`${M} lines up the puppies for a photo: ${a} rows of ${b}. How many puppies?`,
     `${M} place les chiots pour une photo : ${a} rangées de ${b}. Combien de chiots?`);
   return numberQ({
-    key: `ma-${a}-${b}`, badge: '📸 Photo day!', text, big: eq(a, b), say: `${text} ${sayEq(a, b)}`,
+    key: `ma-${a}-${b}`, badge: L('📸 Photo day!', '📸 Jour de photo!'), text, big: eq(a, b), say: `${text} ${sayEq(a, b)}`,
     visual: array(a, b, '🐶'), answer: a * b, mode, max: 100, near: [a, -a, b, -b, 1],
     hint: { text: L(`Count one row: ${b}. There are ${a} rows. Add ${b} again and again.`, `Une rangée : ${b}. Il y a ${a} rangées. Additionne ${b} plusieurs fois.`) },
   });
@@ -57,7 +57,7 @@ function factQ(a, b, mode) {
 function missingQ(mode) {
   const a = rand(2, 10), b = rand(2, 10);
   return numberQ({
-    key: `mm-${a}-${b}`, badge: '🔍 Mystery treat!',
+    key: `mm-${a}-${b}`, badge: L('🔍 Mystery treat!', '🔍 La gâterie mystère!'),
     text: L(`${F} gave out ${a * b} treats, ${a} to each puppy. How many puppies?`, `${F} a donné ${a * b} gâteries, ${a} à chaque chiot. Combien de chiots?`),
     big: `${a} × ${QBOX} = ${a * b}`, say: L(`${a} times what equals ${a * b}?`, `${a} fois combien égale ${a * b}?`),
     answer: b, mode, max: 12, min: 1, near: [1, -1, 2, -2],

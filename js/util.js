@@ -37,6 +37,9 @@ export function numberChoices(answer, { count = 4, min = 0, max = 999, near = [1
   return shuffle([...set]);
 }
 
+/** "1 bag" / "3 bags" */
+export const pl = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
 export const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
