@@ -44,11 +44,18 @@ app.addEventListener('click', (e) => {
 
 // ---------------- screens ----------------
 
+const LOGO_COLORS = ['#e8431f', '#f59e0b', '#1fa34a', '#0b6fb8', '#8e44ad', '#e84393', '#0f8b8d', '#f57c00'];
+function logoHTML() {
+  const letters = (w, off) => [...w].map((c, i) => `<span style="--c:${LOGO_COLORS[(i + off) % LOGO_COLORS.length]};--d:${(i + off) * 0.12}s">${c}</span>`).join('');
+  return `<span class="logo-word">${letters('Home', 0)}</span> <span class="logo-word">${letters('Fun', 4)}</span><span class="logo-deco">🏡⭐</span>`;
+}
+
 function whoScreen() {
   forceLang(null);
   document.body.dataset.theme = 'home';
   document.body.dataset.profile = 'who';
   app.innerHTML = `
+    <div class="logo pop-in" aria-label="Home Fun">${logoHTML()}</div>
     <section class="hero pop-in">
       <div class="hero-row"><h1>Who's playing?</h1>${speakBtn("Who's playing?")}</div>
     </section>
@@ -340,18 +347,30 @@ function settingsScreen() {
 
 // ---- grown-ups ----
 let unlocked = false;
+/** A grown-up maths question that a Grade 3 student cannot do in her head. */
+function makeGate() {
+  const r = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const t = r(0, 3);
+  if (t === 0) { const a = r(13, 29), b = r(12, 19); return { text: `${a} × ${b}`, answer: a * b }; }
+  if (t === 1) { const a = r(21, 49), b = r(6, 9), c = r(11, 59); return { text: `${a} × ${b} + ${c}`, answer: a * b + c }; }
+  if (t === 2) { const base = r(6, 30) * 20, p = pick([15, 35, 45, 65, 85]); return { text: `${p}% of ${base}`, answer: (base * p) / 100 }; }
+  const a = r(15, 39), b = r(11, 19), c = r(7, 9); return { text: `${a} × ${b} − ${c} × ${c}`, answer: a * b - c * c };
+}
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+let gateQ = makeGate();
 function grownups() {
   setTheme('home');
   if (!unlocked) {
     app.innerHTML = `
       ${topBar('#/', '🔒 Grown-ups')}
       <section class="gate pop-in">
-        <p>Grown-ups only! What is <b>7 × 8</b>?</p>
+        <p>Grown-ups only! Quick check:</p>
+        <p class="gate-q"><b>${gateQ.text}</b></p>
         <input id="gate" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Answer">
         <button class="btn primary" id="gate-go">Enter</button>
       </section>`;
     const input = app.querySelector('#gate');
-    const check = () => { if (input.value.trim() === '56') { unlocked = true; grownups(); } else { input.value = ''; input.classList.add('bad'); } };
+    const check = () => { if (input.value.trim() === String(gateQ.answer)) { unlocked = true; grownups(); } else { gateQ = makeGate(); grownups(); } };
     app.querySelector('#gate-go').addEventListener('click', check);
     input.addEventListener('keydown', (e) => e.key === 'Enter' && check());
     return;

@@ -593,3 +593,14 @@ u { text-decoration-thickness: 4px; text-decoration-color: var(--accent); }
   .choices.num .choice { font-size: 1.8rem; }
   .big-eq { font-size: 2rem; }
 }
+
+/* ---------- Home Fun logo ---------- */
+.logo { text-align: center; font-family: var(--display); font-weight: 800; font-size: 3.4rem; line-height: 1.05; margin: 4px 0 6px; position: relative; }
+.logo-word { display: inline-block; white-space: nowrap; }
+.logo-word span { display: inline-block; color: var(--c); text-shadow: 0 3px 0 rgba(42,35,64,.15); animation: logo-bob 2.4s ease-in-out infinite; animation-delay: var(--d); }
+.logo-word span:nth-child(odd) { transform: rotate(-4deg); }
+.logo-word span:nth-child(even) { transform: rotate(4deg); }
+.logo-deco { display: block; font-size: 1.4rem; letter-spacing: .4rem; margin-top: 2px; }
+@keyframes logo-bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+@media (prefers-reduced-motion: reduce) { .logo-word span { animation: none; } }
+.gate-q { font-size: 1.8rem !important; font-family: var(--display); }

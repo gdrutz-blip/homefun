@@ -6,7 +6,7 @@ import { LEVELS } from './levels.js';
 
 // ---------------- dress-up closet ----------------
 export const BUDDIES = [
-  { id: 'dog', e: '🐶', cost: 0 }, { id: 'cat', e: '🐱', cost: 0 }, { id: 'unicorn', e: '🦄', cost: 0 },
+  { id: 'dog', e: '🐶', cost: 0 }, { id: 'cat', e: '🐱', cost: 0 }, { id: 'unicorn', e: '🦄', cost: 0 }, { id: 'rocker', e: '👨‍🎤', cost: 0 },
   { id: 'bunny', e: '🐰', cost: 4 }, { id: 'fox', e: '🦊', cost: 8 }, { id: 'bear', e: '🐻', cost: 12 },
   { id: 'panda', e: '🐼', cost: 18 }, { id: 'frog', e: '🐸', cost: 24 }, { id: 'owl', e: '🦉', cost: 30 },
   { id: 'octopus', e: '🐙', cost: 40 }, { id: 'butterfly', e: '🦋', cost: 50 }, { id: 'dragon', e: '🐲', cost: 65 },
@@ -20,7 +20,7 @@ export const HATS = [
   { id: 'rainbowhat', e: '🌈', fam: 80 },
 ];
 export const EXTRAS = [
-  { id: 'none', e: '', name: 'Nothing', cost: 0 }, { id: 'ice', e: '🍦', cost: 5 }, { id: 'guitar', e: '🎸', cost: 8 },
+  { id: 'none', e: '', name: 'Nothing', cost: 0 }, { id: 'ice', e: '🍦', cost: 5 }, { id: 'guitar', e: '🎸', cost: 0 },
   { id: 'choc', e: '🍫', cost: 9 }, { id: 'mic', e: '🎤', cost: 12 }, { id: 'pizza', e: '🍕', cost: 14 },
   { id: 'worm', e: '🪱', cost: 16 }, { id: 'wand', e: '🪄', cost: 18 }, { id: 'bike', e: '🚲', cost: 22 },
   { id: 'drum', e: '🥁', cost: 25 }, { id: 'soccer', e: '⚽', cost: 28 }, { id: 'teddy', e: '🧸', cost: 32 },
@@ -47,7 +47,7 @@ export const SLOTS = {
 };
 
 const DEFAULTS = {
-  mia: { buddy: 'unicorn', hat: 'none', extra: 'none', bg: 'sunny' },
+  mia: { buddy: 'rocker', hat: 'none', extra: 'guitar', bg: 'sunny' },
   farrah: { buddy: 'dog', hat: 'none', extra: 'none', bg: 'ocean' },
 };
 const byId = (list, id) => list.find((x) => x.id === id) || list[0];
