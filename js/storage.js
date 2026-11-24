@@ -4,7 +4,7 @@ const KEY = 'familyReview.v2';
 const BACKUP_PREFIX = 'FAMILYREVIEW1:';
 const OLD_KEY = 'miaReview.v1'; // before profiles existed: everything belonged to Mia
 
-const BASE_SETTINGS = { autoRead: true, sound: true, slow: false, lang: 'en', tapWords: true, followAlong: true, bigText: false };
+const BASE_SETTINGS = { autoRead: true, sound: true, slow: false, lang: 'en', tapWords: true, followAlong: true, bigText: false, micOn: false };
 const newProfile = (settings = {}) => ({ settings: { ...BASE_SETTINGS, ...settings }, progress: {}, stickers: [], tricky: [], avatar: null, stats: {} });
 
 function load() {

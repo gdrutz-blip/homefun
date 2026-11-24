@@ -460,6 +460,44 @@ body[data-theme="robot"] { --accent: #455a9e; --accent-dark: #2c3a70; --bg1: #e8
 .step { display: inline-flex; flex-direction: column; align-items: center; font-size: 2rem; line-height: 1; background: #fff; border: 3px solid var(--accent); border-radius: 12px; padding: 4px 8px; }
 .step small { font-family: var(--display); font-size: .8rem; color: var(--accent-dark); }
 
+.marbles { font-size: 2rem; line-height: 1.25; letter-spacing: .08em; max-width: 260px; text-align: center; background: #fff; border-radius: 22px; padding: 10px 14px; border: 4px solid #c8a062; }
+.beaker { max-width: 100%; height: auto; }
+
+/* ---------- speaking games ---------- */
+.speak-zone { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 4px; }
+.mic { width: 120px; height: 120px; border-radius: 50%; border: 0; font-size: 3.6rem; background: #e53935; color: #fff; box-shadow: 0 7px 0 #a12622; display: grid; place-items: center; }
+.mic:active { transform: translateY(5px); box-shadow: 0 2px 0 #a12622; }
+.mic.listening { animation: miclisten 1s ease-in-out infinite; background: #ff7043; }
+@keyframes miclisten { 0%,100% { box-shadow: 0 0 0 0 rgba(229,57,53,.55), 0 7px 0 #a12622; } 50% { box-shadow: 0 0 0 18px rgba(229,57,53,0), 0 7px 0 #a12622; } }
+.mic-status { margin: 0; text-align: center; font-weight: 700; min-height: 1.4em; }
+.said.small { font-size: .85rem; min-height: 44px; padding: 8px 14px; }
+.small-ans { font-size: 1.3rem; }
+
+/* ---------- family goals ---------- */
+.fam-badge { position: absolute; top: 2px; right: 4px; font-size: .85rem; }
+.fam-tag { font-size: .5em; display: block; text-align: center; }
+.family-btn { margin-top: 18px; }
+.family-hero { background: #fff; border-radius: var(--radius); padding: 16px 14px; box-shadow: var(--shadow); text-align: center; }
+.family-avatars { display: flex; justify-content: center; align-items: center; gap: 12px; }
+.fam-kid { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.fam-kid small { color: var(--ink-soft); }
+.fam-plus { font-family: var(--display); font-size: 2rem; color: var(--accent-dark); }
+.family-total { font-family: var(--display); font-weight: 700; font-size: 1.5rem; margin: 8px 0; }
+.meter { height: 18px; background: #eee; border-radius: 999px; overflow: hidden; margin: 6px 0 8px; }
+.meter span { display: block; height: 100%; background: linear-gradient(90deg, #ff9ec4, #ffb020, #2bb5a0); border-radius: 999px; transition: width .6s; }
+.goal-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.goal { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.7); border-radius: 16px; padding: 8px 12px; }
+.goal.done { background: #fff8d6; }
+.goal-pic { font-size: 2rem; width: 52px; text-align: center; }
+.goal-text { flex: 1; display: flex; flex-direction: column; }
+.goal-text small { color: var(--ink-soft); }
+
+/* ---------- grown-ups folding ---------- */
+.parent-subject-box { background: rgba(255,255,255,.55); border-radius: 14px; padding: 6px 10px; }
+.parent-subject-box > summary { cursor: pointer; font-family: var(--display); font-weight: 700; font-size: 1.05rem; padding: 6px 2px; }
+.parent-subject-box > summary small { font-family: var(--font); font-weight: 400; color: var(--ink-soft); font-size: .8rem; margin-left: 4px; }
+.parent-subject-box[open] { display: flex; flex-direction: column; gap: 10px; }
+
 /* ---------- backup ---------- */
 .backup textarea { width: 100%; font-family: ui-monospace, monospace; font-size: .75rem; border-radius: 12px; border: 2px solid #ddd; padding: 8px; margin: 4px 0 8px; resize: vertical; }
 .backup .btn { min-height: 46px; padding: 8px 16px; font-size: 1rem; margin-bottom: 6px; }

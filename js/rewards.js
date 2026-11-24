@@ -1,7 +1,7 @@
 // Rewards beyond stickers: a dress-up closet (buddy, hat, extra, background) unlocked with stars,
 // and a trophy shelf (milestones + a "triple crown" for every game).
 import { store } from './storage.js';
-import { currentProfile } from './profiles.js';
+import { PROFILES, currentProfile } from './profiles.js';
 import { LEVELS } from './levels.js';
 
 // ---------------- dress-up closet ----------------
@@ -11,11 +11,13 @@ export const BUDDIES = [
   { id: 'panda', e: '🐼', cost: 18 }, { id: 'frog', e: '🐸', cost: 24 }, { id: 'owl', e: '🦉', cost: 30 },
   { id: 'octopus', e: '🐙', cost: 40 }, { id: 'butterfly', e: '🦋', cost: 50 }, { id: 'dragon', e: '🐲', cost: 65 },
   { id: 'trex', e: '🦖', cost: 80 }, { id: 'lion', e: '🦁', cost: 100 },
+  { id: 'elephant', e: '🐘', fam: 40 }, { id: 'flamingo', e: '🦩', fam: 120 },
 ];
 export const HATS = [
   { id: 'none', e: '', name: 'No hat', cost: 0 }, { id: 'cap', e: '🧢', cost: 3 }, { id: 'bow', e: '🎀', cost: 6 },
   { id: 'straw', e: '👒', cost: 10 }, { id: 'top', e: '🎩', cost: 15 }, { id: 'helmet', e: '⛑️', cost: 20 },
   { id: 'crown', e: '👑', cost: 30 }, { id: 'grad', e: '🎓', cost: 45 },
+  { id: 'rainbowhat', e: '🌈', fam: 80 },
 ];
 export const EXTRAS = [
   { id: 'none', e: '', name: 'Nothing', cost: 0 }, { id: 'ice', e: '🍦', cost: 5 }, { id: 'guitar', e: '🎸', cost: 8 },
@@ -23,6 +25,7 @@ export const EXTRAS = [
   { id: 'worm', e: '🪱', cost: 16 }, { id: 'wand', e: '🪄', cost: 18 }, { id: 'bike', e: '🚲', cost: 22 },
   { id: 'drum', e: '🥁', cost: 25 }, { id: 'soccer', e: '⚽', cost: 28 }, { id: 'teddy', e: '🧸', cost: 32 },
   { id: 'coaster', e: '🎢', cost: 38 }, { id: 'medal', e: '🥇', cost: 45 }, { id: 'trophy', e: '🏆', cost: 60 },
+  { id: 'bottle', e: '🍼', fam: 20 }, { id: 'home', e: '🏡', fam: 60 }, { id: 'cake', e: '🎂', fam: 100 }, { id: 'party', e: '🎉', fam: 150 },
 ];
 export const BGS = [
   { id: 'sunny', css: 'linear-gradient(135deg,#ffe29a,#ffa99f)', cost: 0 },
@@ -33,6 +36,8 @@ export const BGS = [
   { id: 'sunset', css: 'linear-gradient(135deg,#f6d365,#fda085,#c471ed)', cost: 28 },
   { id: 'rainbow', css: 'linear-gradient(135deg,#ff9a9e,#fecf6b,#a1ffce,#8fd3f4,#c3a5ff)', cost: 40 },
   { id: 'galaxy', css: 'linear-gradient(135deg,#0f0c29,#302b63,#6a3093)', cost: 55 },
+  { id: 'family', css: 'linear-gradient(135deg,#ffd1a4,#ff9ec4,#b8a1ff)', fam: 50 },
+  { id: 'confetti', css: 'linear-gradient(135deg,#ffeaa7,#fab1a0,#81ecec,#a29bfe)', fam: 90 },
 ];
 export const SLOTS = {
   buddy: { label: 'Buddy', list: BUDDIES },
@@ -52,13 +57,26 @@ export function avatarOf(profileId) {
   const saved = store.profileData(profileId).avatar || {};
   const av = { ...d, ...saved };
   // If a saved item isn't unlocked (e.g. after a reset), fall back to the default.
-  const stars = starsOf(profileId);
-  for (const k of Object.keys(SLOTS)) if (byId(SLOTS[k].list, av[k]).cost > stars) av[k] = d[k];
+  const stars = starsOf(profileId), fam = familyStars();
+  for (const k of Object.keys(SLOTS)) if (!isUnlocked(byId(SLOTS[k].list, av[k]), stars, fam)) av[k] = d[k];
   return av;
 }
 
 function starsOf(profileId) {
   return Object.values(store.profileData(profileId).progress).reduce((s, p) => s + (p.best || 0), 0);
+}
+
+/** Both girls' stars added together. */
+export function familyStars() { return PROFILES.reduce((n, p) => n + starsOf(p.id), 0); }
+
+/** Items cost own stars (`cost`) or combined family stars (`fam`). */
+export const isUnlocked = (it, stars, fam) => (it.fam ? fam >= it.fam : stars >= (it.cost || 0));
+
+/** The shared family goals, in order, with the item each one unlocks. */
+export function familyGoals() {
+  const out = [];
+  for (const [slot, { list }] of Object.entries(SLOTS)) for (const it of list) if (it.fam) out.push({ ...it, slot });
+  return out.sort((a, b) => a.fam - b.fam);
 }
 
 export function avatarHTML(av, size = 96) {
@@ -68,10 +86,12 @@ export function avatarHTML(av, size = 96) {
 }
 
 /** Closet items that unlock when stars go from `before` to `after`. */
-export function newlyUnlocked(before, after) {
+export function newlyUnlocked(before, after, famBefore = 0, famAfter = 0) {
   const out = [];
   for (const [slot, { list }] of Object.entries(SLOTS)) {
-    for (const it of list) if (it.cost > before && it.cost <= after) out.push({ ...it, slot });
+    for (const it of list) {
+      if (it.fam ? (it.fam > famBefore && it.fam <= famAfter) : (it.cost > before && it.cost <= after)) out.push({ ...it, slot });
+    }
   }
   return out;
 }
@@ -102,6 +122,7 @@ export function computeTrophies(profile = currentProfile()) {
   add('s50', '✨', '50 Stars', 'Collect 50 stars', stars >= 50);
   add('s100', '💫', '100 Stars', 'Collect 100 stars', stars >= 100);
   add('s200', '🌠', '200 Stars', 'Collect 200 stars', stars >= 200);
+  add('family100', '👨‍👩‍👧‍👧', 'Team Sisters', 'Reach 100 family stars together', familyStars() >= 100);
   add('perfect', '💯', 'Perfect Round', 'Get every question right on the first try', (st.perfect || 0) >= 1);
   add('perfect5', '🎖️', '5 Perfect Rounds', 'Get 5 perfect rounds', (st.perfect || 0) >= 5);
   add('spicy', '🌶️', 'Spicy Hero', 'Get 3 stars on a Spicy level', Object.entries(d.progress).some(([k, p]) => k.endsWith('.spicy') && p.best === 3));

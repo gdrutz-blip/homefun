@@ -6,7 +6,7 @@ import { sound } from './sound.js';
 import { runRound } from './engine.js';
 import { surpriseUnit, trickyUnit } from './mix.js';
 import { esc } from './util.js';
-import { avatarOf, avatarHTML, computeTrophies, SLOTS, itemPreview } from './rewards.js';
+import { avatarOf, avatarHTML, computeTrophies, SLOTS, itemPreview, isUnlocked, familyStars, familyGoals } from './rewards.js';
 import { L, isFr, voiceLang, forceLang } from './i18n.js';
 
 const app = document.getElementById('app');
@@ -58,7 +58,8 @@ function whoScreen() {
           <span class="who-name">${p.name}</span>
           <span class="who-grade">Grade ${p.grade}</span>
         </button>`).join('')}
-    </section>`;
+    </section>
+    <button class="btn wide family-btn" data-go="#/family">👨‍👩‍👧‍👧 Family goals · ⭐ ${familyStars()} together</button>`;
   app.querySelectorAll('[data-pick]').forEach((b) => b.addEventListener('click', () => {
     selectProfile(b.dataset.pick);
     sound.tap();
@@ -229,11 +230,33 @@ function rewardsScreen() {
       <p class="sub"><b>${prof.name}</b> · ⭐ ${stars} stars · 🏆 ${got} / ${all.length}</p>
       <button class="btn primary" data-go="#/closet">Dress up 👗</button>
       <button class="btn" data-go="#/stickers">Sticker book 📒</button>
+      <button class="btn" data-go="#/family">Family goals 👨‍👩‍👧‍👧</button>
     </section>
     <h3 class="trophy-title">Milestones</h3>
     <section class="trophy-grid">${all.filter((t) => t.cat === 'milestone').map(card).join('')}</section>
     <h3 class="trophy-title">Game crowns 👑 <small>3 stars on every level</small></h3>
     <section class="trophy-grid">${all.filter((t) => t.cat === 'game').map(card).join('')}</section>`;
+}
+
+function familyScreen() {
+  setTheme('home');
+  const fam = familyStars();
+  const goals = familyGoals();
+  const next = goals.find((g) => g.fam > fam);
+  const top = goals[goals.length - 1].fam;
+  const pct = Math.min(100, Math.round((100 * fam) / top));
+  app.innerHTML = `
+    ${topBar('#/rewards', '👨‍👩‍👧‍👧 Family Goals', `Together you have ${fam} stars!`)}
+    <section class="family-hero pop-in">
+      <div class="family-avatars">${PROFILES.map((p) => `<span class="fam-kid">${avatarHTML(avatarOf(p.id), 70)}<b>${p.name}</b></span>`).join('<span class="fam-plus">+</span>')}</div>
+      <p class="family-total">⭐ ${fam} family stars</p>
+      <div class="meter" role="img" aria-label="${pct}% to the last goal"><span style="width:${pct}%"></span></div>
+      <p class="note">${next ? `Next goal at ${next.fam} stars — ${next.fam - fam} to go!` : 'You unlocked every family goal!'}</p>
+      <p class="note">Every star either of you earns counts. Unlocked items can be worn by both of you.</p>
+    </section>
+    <section class="goal-list">
+      ${goals.map((g) => `<div class="goal ${fam >= g.fam ? 'done' : ''}"><span class="goal-pic">${fam >= g.fam ? itemPreview(g.slot, g) : '🔒'}</span><span class="goal-text"><b>${g.fam} stars</b><small>${SLOTS[g.slot].label}</small></span><span class="goal-state">${fam >= g.fam ? '✅' : ''}</span></div>`).join('')}
+    </section>`;
 }
 
 function closetScreen(tab = 'buddy') {
@@ -242,6 +265,7 @@ function closetScreen(tab = 'buddy') {
   const stars = store.totalStars();
   const av = avatarOf(prof.id);
   const slot = SLOTS[tab];
+  const fam = familyStars();
   const costs = Object.values(SLOTS).flatMap((s) => s.list.map((i) => i.cost)).filter((c) => c > stars);
   const nextCost = costs.length ? Math.min(...costs) : null;
   app.innerHTML = `
@@ -251,9 +275,10 @@ function closetScreen(tab = 'buddy') {
     <div class="tabs">${Object.entries(SLOTS).map(([k, v]) => `<button class="tab ${k === tab ? 'on' : ''}" data-tab="${k}">${v.label}</button>`).join('')}</div>
     <section class="closet-grid">
       ${slot.list.map((it) => {
-        const ok = stars >= it.cost;
-        return `<button class="closet-item ${av[tab] === it.id ? 'sel' : ''} ${ok ? '' : 'locked'}" data-item="${it.id}" ${ok ? '' : 'disabled'} aria-label="${ok ? esc(it.name || it.id) : `Unlocks at ${it.cost} stars`}">
-          <span class="ci-pic">${ok ? itemPreview(tab, it) : '🔒'}</span>${ok ? '' : `<span class="ci-cost">⭐ ${it.cost}</span>`}</button>`;
+        const ok = isUnlocked(it, stars, fam);
+        const costTxt = it.fam ? `👨‍👩‍👧‍👧 ${it.fam}` : `⭐ ${it.cost}`;
+        return `<button class="closet-item ${av[tab] === it.id ? 'sel' : ''} ${ok ? '' : 'locked'}" data-item="${it.id}" ${ok ? '' : 'disabled'} aria-label="${ok ? esc(it.name || it.id) : `Unlocks at ${it.fam ? it.fam + ' family' : it.cost} stars`}">
+          <span class="ci-pic">${ok ? itemPreview(tab, it) : '🔒'}</span>${ok ? (it.fam ? '<span class="fam-badge">👨‍👩‍👧‍👧</span>' : '') : `<span class="ci-cost">${costTxt}</span>`}</button>`;
       }).join('')}
     </section>`;
   app.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { sound.tap(); closetScreen(b.dataset.tab); }));
@@ -280,6 +305,7 @@ function settingsScreen() {
       ${toggle('followAlong', 'Highlight each word as it is read', '🖍️')}
       ${toggle('tapWords', 'Tap a word to hear it', '👆')}
       ${toggle('bigText', 'Bigger text', '🔠')}
+      ${toggle('micOn', 'Let the speaking games listen (microphone)', '🎤')}
       ${toggle('slow', 'Read slowly', '🐢')}
       ${toggle('sound', 'Sound effects', '🔔')}
       <button class="setting ${isFr() ? 'on' : ''}" data-lang-toggle>
@@ -287,12 +313,14 @@ function settingsScreen() {
         <span class="setting-label">Games in French (Math, Science, Social Studies)</span>
         <span class="switch"><span></span></span>
       </button>
+      <p class="note">🎤 Off = the speaking games use the honor system (say it out loud, tap ✅). On = the phone listens and checks. Voice recognition is done by Chrome/Google, so leave it off if you would rather not.</p>
       <p class="note">With “read out loud by itself” off, nothing is spoken until you tap a 🔊 button or a word.</p>
       <button class="btn primary wide" data-test-voice>🔊 Test the voice</button>
       ${speech.supported ? '' : '<p class="note">This browser can’t read out loud. Try Chrome.</p>'}
     </section>`;
   app.querySelectorAll('[data-setting]').forEach((b) => b.addEventListener('click', () => {
     const k = b.dataset.setting;
+    if (k === 'micOn' && !store.settings().micOn && !confirm('Grown-ups: this lets the French speaking games listen through the microphone. Chrome sends what is said to Google to turn it into words. Turn it on?')) return;
     store.setSetting(k, !store.settings()[k]);
     b.classList.toggle('on', store.settings()[k]);
     document.body.dataset.big = store.settings().bigText ? '1' : '0';
@@ -361,7 +389,10 @@ function grownups() {
   const html = PROFILES.map((prof) => `
     <details class="parent-kid" ${prof.id === currentProfile().id ? 'open' : ''}>
       <summary><span>${prof.avatar} ${prof.name}</span> <small>Grade ${prof.grade}</small></summary>
-      ${prof.subjects.filter((s) => !s.comingSoon).map((sub) => `<h4 class="parent-subject">${sub.emoji} ${sub.name}</h4>${sub.units.map((u) => unitCard(prof, sub, u)).join('')}`).join('')}
+      ${prof.subjects.filter((s) => !s.comingSoon).map((sub) => {
+        const rounds = sub.units.reduce((n, u) => n + LEVELS.reduce((m, l) => m + (store.profileData(prof.id).progress[`${sub.id}.${u.id}.${l.id}`]?.plays || 0), 0), 0);
+        return `<details class="parent-subject-box"><summary>${sub.emoji} ${sub.name} <small>${sub.units.length} games · ${rounds} rounds played</small></summary>${sub.units.map((u) => unitCard(prof, sub, u)).join('')}</details>`;
+      }).join('')}
       <button class="btn danger wide" data-reset="${prof.id}">Reset ${prof.name}'s progress &amp; stickers</button>
     </details>`).join('');
   forceLang(null);
@@ -417,6 +448,7 @@ function route() {
   if (a === 'who') return whoScreen();
   if (a === 'rewards') return rewardsScreen();
   if (a === 'closet') return closetScreen();
+  if (a === 'family') return familyScreen();
   if (a === 'surprise' || a === 'tricky') return playMix(a);
   return home();
 }

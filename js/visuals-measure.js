@@ -77,3 +77,35 @@ export function pictograph(items, per = 1) {
   const rows = items.map((it) => `<div class="pict-row"><span class="pict-label">${it.e} ${it.w}</span><span class="pict-items">${'🙋'.repeat(it.c / per)}</span></div>`).join('');
   return `<div class="pict">${rows}<div class="pict-key">${L(`Each 🙋 = ${per} ${per === 1 ? 'vote' : 'votes'}`, `Chaque 🙋 = ${per} ${per === 1 ? 'vote' : 'votes'}`)}</div></div>`;
 }
+
+/** A rectangle w × h, with optional square grid and side labels. */
+export function rectSVG(w, h, { grid = true, all4 = false, unit = 'cm', shade = '#ffb74d', label = true } = {}) {
+  const cell = Math.max(10, Math.min(34, Math.floor(260 / w), Math.floor(160 / h)));
+  const W = w * cell, H = h * cell, padL = 40, padT = 26;
+  let s = `<svg class="mapsvg" viewBox="0 0 ${W + padL + 40} ${H + padT + 30}" role="img" aria-label="${w} by ${h} rectangle">`;
+  s += `<rect x="${padL}" y="${padT}" width="${W}" height="${H}" fill="${shade}" stroke="#7a3d00" stroke-width="3"/>`;
+  if (grid) {
+    for (let i = 1; i < w; i++) s += `<line x1="${padL + i * cell}" y1="${padT}" x2="${padL + i * cell}" y2="${padT + H}" stroke="#7a3d00" stroke-width="1"/>`;
+    for (let j = 1; j < h; j++) s += `<line x1="${padL}" y1="${padT + j * cell}" x2="${padL + W}" y2="${padT + j * cell}" stroke="#7a3d00" stroke-width="1"/>`;
+  }
+  if (label) {
+    const t = (x, y, txt, anchor = 'middle') => `<text x="${x}" y="${y}" font-size="14" font-weight="700" text-anchor="${anchor}" fill="#2a2340">${txt}</text>`;
+    s += t(padL + W / 2, padT - 8, `${w} ${unit}`);
+    s += t(padL - 6, padT + H / 2 + 5, `${h} ${unit}`, 'end');
+    if (all4) { s += t(padL + W / 2, padT + H + 20, `${w} ${unit}`); s += t(padL + W + 6, padT + H / 2 + 5, `${h} ${unit}`, 'start'); }
+  }
+  return s + '</svg>';
+}
+
+/** Measuring cup showing `ml` out of `max` (ticks every 100 mL, or `tick`). */
+export function beaker(ml, max = 1000, tick = 100) {
+  const top = 14, bot = 176, left = 44, w = 56, y = (v) => bot - ((bot - top) * v) / max;
+  let s = `<svg class="beaker" viewBox="0 0 140 200" width="140" height="200" role="img" aria-label="measuring cup">`;
+  s += `<rect x="${left}" y="${y(ml)}" width="${w}" height="${bot - y(ml)}" fill="#64b5f6"/>`;
+  s += `<path d="M${left} ${top} V${bot} H${left + w} V${top}" fill="none" stroke="#2a2340" stroke-width="3"/>`;
+  for (let v = 0; v <= max; v += tick) {
+    s += `<line x1="${left}" y1="${y(v)}" x2="${left + 12}" y2="${y(v)}" stroke="#2a2340" stroke-width="2"/>`;
+    s += `<text x="${left - 5}" y="${y(v) + 4}" font-size="11" text-anchor="end" fill="#2a2340">${v}</text>`;
+  }
+  return s + `<text x="${left + w + 8}" y="${top + 10}" font-size="11" fill="#2a2340">mL</text></svg>`;
+}

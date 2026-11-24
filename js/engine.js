@@ -8,7 +8,7 @@ import { esc, pick, orList } from './util.js';
 import { awardStickers } from './stickers.js';
 import { ROUND_LENGTH } from './config.js';
 import { currentProfile } from './profiles.js';
-import { computeTrophies, newlyUnlocked, itemPreview } from './rewards.js';
+import { computeTrophies, newlyUnlocked, itemPreview, familyStars } from './rewards.js';
 import { L, voiceLang } from './i18n.js';
 
 const PRAISE = () => L(['Great job!', 'You got it!', 'Awesome!', 'Super!', 'Yes!', 'Fantastic!', 'Way to go!', 'Nailed it!'],
@@ -40,6 +40,22 @@ function wordify(el) {
     node.replaceWith(frag);
   }
 }
+// ----- listening (speaking games) -----
+const SR = typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
+const normSpeech = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+function lev(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+/** Did she say the target (accents, capitals and small slips don't matter)? */
+export function heardOk(alternatives, target, accept = []) {
+  const goals = [target, ...accept].map(normSpeech).filter(Boolean);
+  return alternatives.some((t) => { const n = normSpeech(t); return goals.some((g) => n === g || lev(n, g) <= Math.floor(g.length * 0.18)); });
+}
+const canListen = () => !!(SR && store.settings().micOn);
+
 const bareWord = (w) => w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
 
 export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, length = ROUND_LENGTH, mixed = false }) {
@@ -114,6 +130,16 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
   }
 
   function answersHTML() {
+    if (q.type === 'speak') {
+      const mic = canListen();
+      return `<div class="speak-zone">
+        ${mic ? `<button class="mic" data-act="mic" aria-label="${L('Say it', 'Dis-le')}">🎤</button>
+          <p class="mic-status" aria-live="polite">${L('Tap the mic and say it!', 'Touche le micro et dis-le!')}</p>
+          <button class="btn said small" data-act="said">✅ ${L('Mic not working? I said it', 'Le micro ne marche pas? Je l’ai dit')}</button>`
+    : `<p class="mic-status" aria-live="polite">${L('Say it out loud, then tap ✅.', 'Dis-le à voix haute, puis touche ✅.')}</p>
+          <button class="btn primary said" data-act="said">✅ ${L('I said it!', 'Je l’ai dit!')}</button>`}
+      </div>`;
+    }
     if (q.type === 'number') {
       const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'del', '0', 'ok'];
       return `
@@ -173,9 +199,55 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     if (act === 'next') { idx++; return next(); }
     if (locked) return;
     if (act === 'choose') return choose(t);
+    if (act === 'mic') return listen(t);
+    if (act === 'said') return correct(t);
     if (act === 'key') { sound.tap(); if (typed.length < 4) typed += t.dataset.k; return showTyped(); }
     if (act === 'del') { typed = typed.slice(0, -1); return showTyped(); }
     if (act === 'check') return checkTyped();
+  }
+
+  let listening = false;
+  function listen(btn) {
+    if (listening || !SR) return;
+    const status = (msg) => { const el = stage.querySelector('.mic-status'); if (el) el.textContent = msg; };
+    speech.stop();
+    const rec = new SR();
+    rec.lang = q.lang || 'fr-CA';
+    rec.interimResults = false;
+    rec.maxAlternatives = 5;
+    rec.continuous = false;
+    listening = true;
+    btn.classList.add('listening');
+    status(L('Listening…', 'Je t’écoute…') + ' 🎧');
+    let handled = false;
+    let timer = null;
+    const done = () => { clearTimeout(timer); listening = false; btn.classList.remove('listening'); };
+    // If the phone's recognizer never answers, stop waiting after a while so she can try again.
+    timer = setTimeout(() => {
+      if (handled) return;
+      handled = true;
+      try { rec.abort(); } catch { /* ignore */ }
+      done();
+      status(L('I did not hear anything. Try again, or tap ✅ after you say it.', 'Je n’ai rien entendu. Essaie encore, ou touche ✅ après l’avoir dit.'));
+    }, 12000);
+    rec.onresult = (e) => {
+      handled = true; done();
+      if (!alive() || locked) return;
+      const alts = [...(e.results[0] || [])].map((r) => r.transcript);
+      if (heardOk(alts, q.target, q.accept)) return correct(btn);
+      status(L(`I heard: “${alts[0] || '…'}”. Try again!`, `J’ai entendu : « ${alts[0] || '…'} ». Essaie encore!`));
+      wrong(null);
+    };
+    rec.onerror = (e) => {
+      handled = true; done();
+      status(e.error === 'not-allowed' || e.error === 'service-not-allowed'
+        ? L('The microphone is blocked. Ask a grown-up, or tap ✅ after you say it.', 'Le micro est bloqué. Demande à un adulte, ou touche ✅ après l’avoir dit.')
+        : e.error === 'network'
+          ? L('No connection to listen. Tap ✅ after you say it.', 'Pas de connexion pour écouter. Touche ✅ après l’avoir dit.')
+          : L('I did not hear anything. Try again!', 'Je n’ai rien entendu. Essaie encore!'));
+    };
+    rec.onend = () => { if (!handled) { done(); status(L('I did not hear anything. Try again!', 'Je n’ai rien entendu. Essaie encore!')); } };
+    try { rec.start(); } catch { done(); status(L('Tap ✅ after you say it.', 'Touche ✅ après l’avoir dit.')); }
   }
 
   function speakQuestion() {
@@ -258,6 +330,21 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
   }
 
   function reveal() {
+    if (q.type === 'speak') {
+      locked = true;
+      results.push({ ok: false, text: q.plain });
+      trackTricky(false);
+      dots[idx].classList.add('helped');
+      stage.querySelector('.answers').innerHTML = `
+        <div class="reveal-card pop-in">
+          <p>${L('Say it with me:', 'Dis-le avec moi :')} <b class="reveal-ans small-ans">${q.target}</b></p>
+          <p class="small">${L('Practice makes perfect! You will get the next one.', 'C’est en pratiquant qu’on apprend! Tu vas réussir la prochaine.')}</p>
+          <button class="btn" data-act="say-q">🔊 ${L('Listen again', 'Écouter encore')}</button>
+          <button class="btn primary" data-act="next">${L('Next', 'Suivant')} ➜</button>
+        </div>`;
+      say(q.target, q.lang);
+      return;
+    }
     const shown = q.revealLabel || String(q.answer);
     if (q.type === 'number') {
       locked = true;
@@ -319,13 +406,14 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     const firstTry = results.filter((r) => r.ok).length;
     const stars = firstTry >= N - 1 ? 3 : firstTry >= N - 3 ? 2 : 1;
     const starsBefore = store.totalStars();
+    const famBefore = familyStars();
     const trophiesBefore = new Set(computeTrophies().filter((t) => t.earned).map((t) => t.id));
     store.recordRound(progressKey, {
       stars, firstTry, total: N,
       missed: results.filter((r) => !r.ok).map((r) => r.text),
     });
     if (mixed && unit.id === 'surprise') store.bump('surprise');
-    const newItems = newlyUnlocked(starsBefore, store.totalStars());
+    const newItems = newlyUnlocked(starsBefore, store.totalStars(), famBefore, familyStars());
     const newTrophies = computeTrophies().filter((t) => t.earned && !trophiesBefore.has(t.id));
     const won = awardStickers(stars === 3 ? 2 : 1, currentProfile().stickers);
     const up = mixed ? null : nextLevel(levelId);
@@ -352,7 +440,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
         ${newItems.length ? `
           <div class="new-items">
             <p>🎁 ${newItems.length > 1 ? 'New things for your closet!' : 'New thing for your closet!'}</p>
-            <div class="sticker-row">${newItems.map((i) => `<span class="closet-new">${itemPreview(i.slot, i)}</span>`).join('')}</div>
+            <div class="sticker-row">${newItems.map((i) => `<span class="closet-new" title="${i.fam ? 'Family unlock' : ''}">${itemPreview(i.slot, i)}${i.fam ? '<small class="fam-tag">👨‍👩‍👧‍👧</small>' : ''}</span>`).join('')}</div>
             <button class="btn" data-go="#/closet">Dress up 👗</button>
           </div>` : ''}
         <div class="end-actions">

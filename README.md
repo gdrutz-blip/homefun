@@ -21,6 +21,10 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🏭 Gummy Worm Factory | Numbers to 1000 | Hundreds/tens/ones | Compare, digit value | Skip count by 25/50/100, expanded form |
 | 🍕 Pizza Night at the Cottage | Fractions | Halves, thirds, fourths; equal parts | 3/4, 5/6…; match pictures | Compare unit fractions, pizza left over |
 | 🎢 Amusement Park Day | Money | Coins to $1 | Loonies, toonies, change from $1 | Change from $5/$10, enough money? |
+| 🧹 Room Organizer Pro | Perimeter & area | Count squares, small perimeters | Perimeter and area of rectangles | Missing sides, same perimeter different area |
+| 🍳 Farrah's Breakfast Kitchen | Mass & capacity | Which unit? (mL, L, g, kg) | Read the measuring cup, recipes | Convert L↔mL and kg↔g, compare |
+| ⏱️ Game Day Schedule | Time | Clocks to 5 min, a.m./p.m. | To the minute, time units | Elapsed time, end time |
+| 📊 Sports Stats | Graphs & probability | Scales of 5 | Pictographs (×5/×10), how many more | Likely/unlikely/certain, most likely |
 
 ### Mia's Science (Grade 2)
 
@@ -52,6 +56,9 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | ⏳ Time Travel to Upper Canada | Communities 1780–1850 | Daily life long ago | First Nations and settlers | How communities changed |
 | 💃 Le studio de danse | Verbs, opposites, plurals | être/avoir (je, tu, il) | être/avoir/aller, all subjects | Plurals, opposites, mixed verbs |
 | 📓 Le journal de Farrah | Reading | Question words | Diary pages | Harder reading, correct sentences |
+| 🍳 La cuisine de Farrah | Articles, verbs, agreement | un/une/des, le/la/les | Verbs in -er | All persons, adjective agreement |
+| 📚 Les histoires de Farrah | Reading stories | Who/what/where | Order of events | Why, word meaning, best title |
+| 🎤 La scène de Farrah / Le micro de Mia | Speaking | Short phrases (words for Mia) | Longer sentences | Numbers and tongue twisters |
 
 ## Reading support and voice
 
@@ -64,6 +71,14 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 - **⭐ Stars and 📒 stickers** after every round.
 - **👗 Dress-up closet:** pick a buddy (🦄🐶🦊🦖…), a hat, an extra (🎸🍕🪱🚲…) and a background. Items unlock as her total stars grow, and the end-of-round screen announces new ones.
 - **🏆 Trophy shelf:** milestones (rounds, stars, perfect rounds, Spicy Hero, Explorer, Tricky Tamer…) and a "game crown" for earning 3 stars on all three levels of any game.
+
+## Speaking games (microphone)
+
+The 🎤 games play a French word or sentence, then she says it back. **The microphone is off by default**: she says it out loud and taps ✅ (honor system). A grown-up can turn on *Let the speaking games listen* in ⚙️ Settings so the phone checks what was said. Voice recognition is done by Chrome, which sends the audio to Google, so it's your call.
+
+## Family goals
+
+👨‍👩‍👧‍👧 Both girls' stars add up toward family goals (Family Goals screen). Reaching them unlocks shared dress-up items (a baby bottle for Gemma, an elephant buddy, a family sunset background, a rainbow hat…) that both can wear.
 
 ## Moving to a new phone
 
