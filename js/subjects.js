@@ -12,6 +12,7 @@ import time from './units/math/time.js';
 import data from './units/math/data.js';
 import machines from './units/science/machines.js';
 import weather from './units/science/weather.js';
+import materials from './units/science/materials.js';
 import coding from './units/math/coding.js';
 import echo from './units/french/echo-mia.js';
 import thennow from './units/social/thennow.js';
@@ -30,7 +31,7 @@ export const SUBJECTS = [
   },
   // Always in French (it's French practice!).
   { id: 'french', name: 'Français', frName: 'Français', emoji: '🥐', color: '#3d7bfd', forceLang: 'fr', units: [mots, nombres, echo] },
-  { id: 'science', name: 'Science', frName: 'Les sciences', emoji: '🔬', color: '#2bb5a0', bilingual: true, units: [animals, matter, machines, weather] },
+  { id: 'science', name: 'Science', frName: 'Les sciences', emoji: '🔬', color: '#2bb5a0', bilingual: true, units: [animals, matter, machines, weather, materials] },
   { id: 'social', name: 'Social Studies', frName: 'Études sociales', emoji: '🌎', color: '#ffb020', bilingual: true, units: [map, traditions, thennow, world] },
 ];
 

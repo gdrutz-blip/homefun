@@ -6,6 +6,7 @@ import { sound } from './sound.js';
 import { runRound } from './engine.js';
 import { surpriseUnit, trickyUnit } from './mix.js';
 import { esc } from './util.js';
+import { weekSummary, summaryText } from './summary.js';
 import { avatarOf, avatarHTML, computeTrophies, SLOTS, itemPreview, isUnlocked, familyStars, familyGoals } from './rewards.js';
 import { L, isFr, voiceLang, forceLang } from './i18n.js';
 
@@ -386,9 +387,23 @@ function grownups() {
   };
   // Show unit names in English here, whatever language the kids picked.
   forceLang('en');
-  const html = PROFILES.map((prof) => `
+  const summaries = PROFILES.map((prof) => weekSummary(prof));
+  const weekCard = (sm) => `
+    <div class="week-card">
+      <h4>📅 This week</h4>
+      ${sm.rounds ? `
+        <div class="week-stats"><span><b>${sm.rounds}</b>rounds</span><span><b>${sm.days}</b>${sm.days === 1 ? 'day' : 'days'}</span><span><b>${sm.minutes}</b>min</span><span><b>${sm.firstTry}%</b>first try</span></div>
+        ${sm.bySubject.length ? `<p>Practised: ${sm.bySubject.map(([n, c]) => `${esc(n)} (${c})`).join(', ')}</p>` : ''}
+        ${sm.going.length ? `<p>👍 Going well: ${sm.going.map((u) => `${esc(u.title)} (${u.pct}%)`).join(', ')}</p>` : ''}
+        ${sm.practice.length ? `<p>🔁 Could use practice: ${sm.practice.map((u) => `${esc(u.title)} (${u.pct}%)`).join(', ')}</p>` : ''}
+        ${sm.tricky ? `<p>🧠 Tricky questions waiting: ${sm.tricky}</p>` : ''}`
+    : '<p class="note">No rounds played in the last 7 days.</p>'}
+    </div>`;
+  const summaryPlain = summaryText(summaries);
+  const html = PROFILES.map((prof, pi) => `
     <details class="parent-kid" ${prof.id === currentProfile().id ? 'open' : ''}>
       <summary><span>${prof.avatar} ${prof.name}</span> <small>Grade ${prof.grade}</small></summary>
+      ${weekCard(summaries[pi])}
       ${prof.subjects.filter((s) => !s.comingSoon).map((sub) => {
         const rounds = sub.units.reduce((n, u) => n + LEVELS.reduce((m, l) => m + (store.profileData(prof.id).progress[`${sub.id}.${u.id}.${l.id}`]?.plays || 0), 0), 0);
         return `<details class="parent-subject-box"><summary>${sub.emoji} ${sub.name} <small>${sub.units.length} games · ${rounds} rounds played</small></summary>${sub.units.map((u) => unitCard(prof, sub, u)).join('')}</details>`;
@@ -399,7 +414,9 @@ function grownups() {
   app.innerHTML = `
     ${topBar('#/', '📊 Grown-ups')}
     <section class="parent">
-      <p class="note">Progress is saved on this device only. "First try" means right without a hint.</p>
+      <p class="note">Progress is saved on this device only. "First try" means right without a hint. The weekly numbers count rounds finished since this feature was added.</p>
+      <button class="btn primary wide" id="copy-summary">📋 Copy this week's summary</button>
+      <p class="note" id="summary-msg" role="status"></p>
       ${html}
       <details class="parent-kid backup">
         <summary><span>💾 Backup &amp; restore</span></summary>
@@ -412,6 +429,10 @@ function grownups() {
         <p class="note" id="backup-msg" role="status"></p>
       </details>
     </section>`;
+  app.querySelector('#copy-summary').addEventListener('click', async () => {
+    const m = app.querySelector('#summary-msg');
+    try { await navigator.clipboard.writeText(summaryPlain); m.textContent = 'Copied! Paste it into a note, email or message.'; } catch { m.textContent = 'Could not copy automatically — here it is:\n\n' + summaryPlain; m.style.whiteSpace = 'pre-wrap'; }
+  });
   const out = app.querySelector('#backup-out');
   out.value = store.exportCode();
   const msg = app.querySelector('#backup-msg');

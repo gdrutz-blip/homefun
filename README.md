@@ -34,6 +34,7 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🍫 Mia's Chocolate Kitchen | Solids & liquids | Solid or liquid? | Melting, freezing | Sink/float, dissolving |
 | 🛝 Playground Machines | Movement & simple machines | Ways things move | Lever, ramp, wheel and axle, pulley | Which machine helps? friction |
 | 🌦️ Cottage Weather Station | Air & water | Water, air, wind | The water cycle | Air takes up space, protect water |
+| 🫧 Mia's Slime Lab | Materials & objects | Glass, wood, metal; hard/soft | Absorbent, flexible, rigid, magnetic | Best material for the job, fair tests |
 
 ### Mia's Social Studies (Grade 2)
 
@@ -52,8 +53,12 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🚲 Bike Park & Sports Day | Forces causing movement | Push or pull | Gravity, friction, magnets, static | Surfaces, attract/repel, how forces change motion |
 | 🛖 Cottage Builders | Strong & stable structures | Strong, stable, triangles, wide bases | Compression, tension, loads, materials | Improve a design, arches, fair tests |
 | 🪱 Garden Dirt Detectives | Soils | What soil is and does | Sand, clay, humus, layers | Erosion, compost, testing |
+| 🧲 Magnet Lab | Magnets & static electricity | Poles, what sticks | Compass, magnetic metals | Static, lightning, electromagnets |
+| 🪨 Rock Detectives | Rocks & minerals | What rocks are | Igneous, sedimentary, metamorphic | Weathering, uses, hardness |
 | 🚗 Ontario Road Trip | Living & working in Ontario | Capitals, Great Lakes, our town | Regions, land use and jobs | Land-use choices, maps |
 | ⏳ Time Travel to Upper Canada | Communities 1780–1850 | Daily life long ago | First Nations and settlers | How communities changed |
+| 🍁 Coast to Coast Road Trip | Provinces & capitals | Canada, Ontario, oceans | Provincial capitals | Landmarks, territories, directions |
+| 🏘️ Our Community Helpers | Communities, rules & helping | Helpers, needs vs. wants | Rules, rights, voting | Fair decisions, inclusion |
 | 💃 Le studio de danse | Verbs, opposites, plurals | être/avoir (je, tu, il) | être/avoir/aller, all subjects | Plurals, opposites, mixed verbs |
 | 📓 Le journal de Farrah | Reading | Question words | Diary pages | Harder reading, correct sentences |
 | 🍳 La cuisine de Farrah | Articles, verbs, agreement | un/une/des, le/la/les | Verbs in -er | All persons, adjective agreement |
@@ -71,6 +76,10 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 - **⭐ Stars and 📒 stickers** after every round.
 - **👗 Dress-up closet:** pick a buddy (🦄🐶🦊🦖…), a hat, an extra (🎸🍕🪱🚲…) and a background. Items unlock as her total stars grow, and the end-of-round screen announces new ones.
 - **🏆 Trophy shelf:** milestones (rounds, stars, perfect rounds, Spicy Hero, Explorer, Tricky Tamer…) and a "game crown" for earning 3 stars on all three levels of any game.
+
+## Weekly summary for grown-ups
+
+On the Grown-ups page (🔒), each girl has a **📅 This week** card: rounds played, active days, minutes, and how often she was right on the first try, plus what she practised, what's going well (80%+) and what could use practice (under 70%). **Copy this week's summary** puts a plain-text version on the clipboard to paste into a note or message. It counts rounds finished since this feature was added.
 
 ## Speaking games (microphone)
 

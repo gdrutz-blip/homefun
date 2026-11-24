@@ -473,6 +473,14 @@ body[data-theme="robot"] { --accent: #455a9e; --accent-dark: #2c3a70; --bg1: #e8
 .said.small { font-size: .85rem; min-height: 44px; padding: 8px 14px; }
 .small-ans { font-size: 1.3rem; }
 
+/* ---------- weekly summary ---------- */
+.week-card { background: #fff; border-radius: 16px; padding: 10px 14px; box-shadow: 0 3px 0 rgba(42,35,64,.1); }
+.week-card h4 { margin: 0 0 6px; font-size: 1.05rem; }
+.week-card p { margin: 4px 0; font-size: .92rem; }
+.week-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; margin-bottom: 6px; }
+.week-stats span { background: #f4f1ff; border-radius: 12px; padding: 6px 2px; font-size: .75rem; color: var(--ink-soft); display: flex; flex-direction: column; }
+.week-stats b { font-family: var(--display); font-size: 1.3rem; color: var(--accent-dark); }
+
 /* ---------- family goals ---------- */
 .fam-badge { position: absolute; top: 2px; right: 4px; font-size: .85rem; }
 .fam-tag { font-size: .5em; display: block; text-align: center; }

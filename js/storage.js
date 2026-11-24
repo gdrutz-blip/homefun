@@ -5,7 +5,7 @@ const BACKUP_PREFIX = 'FAMILYREVIEW1:';
 const OLD_KEY = 'miaReview.v1'; // before profiles existed: everything belonged to Mia
 
 const BASE_SETTINGS = { autoRead: true, sound: true, slow: false, lang: 'en', tapWords: true, followAlong: true, bigText: false, micOn: false };
-const newProfile = (settings = {}) => ({ settings: { ...BASE_SETTINGS, ...settings }, progress: {}, stickers: [], tricky: [], avatar: null, stats: {} });
+const newProfile = (settings = {}) => ({ settings: { ...BASE_SETTINGS, ...settings }, progress: {}, stickers: [], tricky: [], avatar: null, stats: {}, log: [] });
 
 function load() {
   try {
@@ -64,7 +64,7 @@ export const store = {
 
   progress: (key) => cur().progress[key],
 
-  recordRound(key, { stars, firstTry, total, missed }) {
+  recordRound(key, { stars, firstTry, total, missed, ms = 0 }) {
     const prog = cur().progress;
     const p = prog[key] || { best: 0, plays: 0, firstTry: 0, total: 0, missed: [] };
     p.best = Math.max(p.best, stars);
@@ -77,6 +77,10 @@ export const store = {
     const st = (cur().stats = cur().stats || {});
     st.rounds = (st.rounds || 0) + 1;
     if (firstTry === total && total >= 5) st.perfect = (st.perfect || 0) + 1;
+    // Activity log for the weekly summary (newest last, capped).
+    const log = (cur().log = cur().log || []);
+    log.push({ t: Date.now(), k: key, s: stars, f: firstTry, n: total, ms: Math.min(ms, 20 * 60 * 1000) });
+    if (log.length > 400) log.splice(0, log.length - 400);
     save();
   },
 
@@ -112,7 +116,7 @@ export const store = {
   /** A text code with everything (both kids) so progress can move to another phone. */
   exportCode() {
     // Tricky questions are left out: they are big and rebuild themselves as she plays.
-    const slim = Object.fromEntries(Object.entries(data.profiles).map(([id, p]) => [id, { ...p, tricky: [] }]));
+    const slim = Object.fromEntries(Object.entries(data.profiles).map(([id, p]) => [id, { ...p, tricky: [], log: (p.log || []).slice(-60) }]));
     const bytes = new TextEncoder().encode(JSON.stringify({ v: 2, current: data.current, profiles: slim }));
     let bin = '';
     bytes.forEach((b) => { bin += String.fromCharCode(b); });
@@ -130,7 +134,7 @@ export const store = {
       for (const [id, p] of Object.entries(parsed.profiles)) {
         const fresh = newProfile();
         profiles[id] = { ...fresh, ...p, settings: { ...fresh.settings, ...(p.settings || {}) },
-          progress: p.progress || {}, stickers: p.stickers || [], tricky: p.tricky || [], stats: p.stats || {} };
+          progress: p.progress || {}, stickers: p.stickers || [], tricky: p.tricky || [], stats: p.stats || {}, log: p.log || [] };
       }
       data = { current: null, profiles };
       save();

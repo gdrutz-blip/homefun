@@ -13,6 +13,10 @@ import plants from './units/g3/science/plants.js';
 import forces from './units/g3/science/forces.js';
 import structures from './units/g3/science/structures.js';
 import soils from './units/g3/science/soils.js';
+import magnets from './units/g3/science/magnets.js';
+import rocks from './units/g3/science/rocks.js';
+import provinces from './units/g3/social/provinces.js';
+import community from './units/g3/social/community.js';
 import ontario from './units/g3/social/ontario.js';
 import longago from './units/g3/social/longago.js';
 import danse from './units/g3/french/danse.js';
@@ -28,6 +32,6 @@ export const SUBJECTS_G3 = [
   },
   // Always in French (it's French practice!).
   { id: 'french3', name: 'Français', frName: 'Français', emoji: '🥐', color: '#3d7bfd', forceLang: 'fr', units: [danse, journal, cuisine, histoires, echo3] },
-  { id: 'science3', name: 'Science', frName: 'Les sciences', emoji: '🔬', color: '#2bb5a0', bilingual: true, units: [plants, forces, structures, soils] },
-  { id: 'social3', name: 'Social Studies', frName: 'Études sociales', emoji: '🌎', color: '#ffb020', bilingual: true, units: [ontario, longago] },
+  { id: 'science3', name: 'Science', frName: 'Les sciences', emoji: '🔬', color: '#2bb5a0', bilingual: true, units: [plants, forces, structures, soils, magnets, rocks] },
+  { id: 'social3', name: 'Social Studies', frName: 'Études sociales', emoji: '🌎', color: '#ffb020', bilingual: true, units: [ontario, longago, provinces, community] },
 ];

@@ -65,6 +65,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
   const seen = new Set();
   const results = [];
   let idx = 0;
+  const startedAt = Date.now();
   let q = null;
   let tries = 0;
   let locked = false;
@@ -411,6 +412,7 @@ export function runRound({ root, subjectId, unit, levelId, onQuit, onPlay, lengt
     store.recordRound(progressKey, {
       stars, firstTry, total: N,
       missed: results.filter((r) => !r.ok).map((r) => r.text),
+      ms: Date.now() - startedAt,
     });
     if (mixed && unit.id === 'surprise') store.bump('surprise');
     const newItems = newlyUnlocked(starsBefore, store.totalStars(), famBefore, familyStars());
