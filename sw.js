@@ -1,5 +1,5 @@
 // Offline support. Network first (so updates show up right away), cache as a fallback.
-const CACHE = 'mia-review-v14';
+const CACHE = 'mia-review-v15';
 const CORE = [
   './', 'index.html', 'manifest.json', 'css/styles.css',
   'js/app.js', 'js/config.js', 'js/util.js', 'js/storage.js', 'js/speech.js', 'js/sound.js',

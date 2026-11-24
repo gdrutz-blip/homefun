@@ -6,7 +6,7 @@ import { LEVELS } from './levels.js';
 
 // ---------------- dress-up closet ----------------
 export const BUDDIES = [
-  { id: 'dog', e: '🐶', cost: 0 }, { id: 'cat', e: '🐱', cost: 0 }, { id: 'unicorn', e: '🦄', cost: 0 }, { id: 'rocker', e: '👨‍🎤', cost: 0 },
+  { id: 'dog', e: '🐶', cost: 0 }, { id: 'cat', e: '🐱', cost: 0 }, { id: 'unicorn', e: '🦄', cost: 0 }, { id: 'rocker', e: '<svg viewBox="0 0 100 100" width="1em" height="1em" style="vertical-align:-.12em"><path d="M12 100 C14 76 32 70 50 70 C68 70 86 76 88 100Z" fill="#2f6fd0"/><path d="M40 70 L50 82 L60 70Z" fill="#f4f1ea"/><rect x="43" y="60" width="14" height="13" rx="4" fill="#f1c9a5"/><ellipse cx="50" cy="42" rx="24" ry="27" fill="#f6d3b3"/><path d="M25 40 C22 14 42 9 52 11 C70 11 79 24 75 41 C70 30 62 25 50 25 C38 25 30 30 25 40Z" fill="#2a1d17"/><g fill="none" stroke="#111" stroke-width="4.5"><rect x="28" y="37" width="19" height="15" rx="4"/><rect x="53" y="37" width="19" height="15" rx="4"/><path d="M47 43 H53"/></g><circle cx="38" cy="45" r="2.6" fill="#111"/><circle cx="62" cy="45" r="2.6" fill="#111"/><path d="M41 60 Q50 67 59 60" fill="none" stroke="#9b4b3a" stroke-width="3" stroke-linecap="round"/></svg>', cost: 0 },
   { id: 'bunny', e: '🐰', cost: 4 }, { id: 'fox', e: '🦊', cost: 8 }, { id: 'bear', e: '🐻', cost: 12 },
   { id: 'panda', e: '🐼', cost: 18 }, { id: 'frog', e: '🐸', cost: 24 }, { id: 'owl', e: '🦉', cost: 30 },
   { id: 'octopus', e: '🐙', cost: 40 }, { id: 'butterfly', e: '🦋', cost: 50 }, { id: 'dragon', e: '🐲', cost: 65 },
