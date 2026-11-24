@@ -148,7 +148,7 @@ Progress is saved **on the device** (browser storage). Clearing site data resets
 ## Putting it on her phone
 
 1. Turn on GitHub Pages for this repo: **Settings → Pages → Build and deployment → Source: "Deploy from a branch"**. Pick the branch and the `/ (root)` folder, then Save.
-2. After a minute the site is live at `https://<your-github-username>.github.io/miagrade2/`.
+2. After a minute the site is live at `https://<your-github-username>.github.io/homefun/`.
 3. Open that link in Chrome on the Pixel, tap **⋮ → Add to Home screen** (or **Install app**). It now opens full-screen like an app and works offline.
 
 ## Trying it on a computer
