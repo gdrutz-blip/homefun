@@ -15,8 +15,8 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 
 | Game | Skill | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
 |---|---|---|---|---|
-| 🐶 Puppy Training School | Multiplication | Equal groups and arrays with pictures | Facts of 2, 5, 10 | Up to 7 × 7, missing factors |
-| 🪱 Cousin Snack Share | Division | Sharing with pictures | Sharing and grouping (2, 5, 10) | Facts up to 49 ÷ 7 |
+| 🐶 Puppy Training School | Multiplication | Equal groups and arrays with pictures | Facts of 2, 5, 10 | Up to 10 × 10, missing factors |
+| 🪱 Cousin Snack Share | Division | Sharing with pictures | Sharing and grouping (2, 5, 10) | Facts up to 100 ÷ 10 |
 | 🍳 Breakfast Diner | Add & subtract to 1000 | Hundreds and tens | 3-digit, no regrouping | 3-digit with regrouping |
 | 🏭 Gummy Worm Factory | Numbers to 1000 | Hundreds/tens/ones | Compare, digit value | Skip count by 25/50/100, expanded form |
 | 🍕 Pizza Night at the Cottage | Fractions | Halves, thirds, fourths; equal parts | 3/4, 5/6…; match pictures | Compare unit fractions, pizza left over |
@@ -31,12 +31,23 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 🛝 Playground Machines | Movement & simple machines | Ways things move | Lever, ramp, wheel and axle, pulley | Which machine helps? friction |
 | 🌦️ Cottage Weather Station | Air & water | Water, air, wind | The water cycle | Air takes up space, protect water |
 
+### Mia's Social Studies (Grade 2)
+
+| Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
+|---|---|---|---|---|
+| 🗺️ World Tour | Maps & the world | N/S/E/W on a grid | Routes, the 7 continents | Oceans, map legends |
+| 🎉 Family Celebrations | Traditions | Match celebrations | Seasons & months | Family words, then & now |
+| ⏳ Grandparents' Time Machine | Changes over time | Old things and new things | How life has changed | Timelines, why things change |
+| 🌍 Around the World with Mia | Communities of the world (Jamaica!) | City, countryside, Jamaica | Homes, weather, culture | Alike and different |
+
 ### Farrah's Science, Social Studies and Français
 
 | Game | Topic | 🌶️ | 🌶️🌶️ | 🌶️🌶️🌶️ |
 |---|---|---|---|---|
 | 🌱 Farrah's Chili Garden | Growth & changes in plants | Plant parts, needs | Life cycle, parts we eat | Seed travel, bees, plant facts |
 | 🚲 Bike Park & Sports Day | Forces causing movement | Push or pull | Gravity, friction, magnets, static | Surfaces, attract/repel, how forces change motion |
+| 🛖 Cottage Builders | Strong & stable structures | Strong, stable, triangles, wide bases | Compression, tension, loads, materials | Improve a design, arches, fair tests |
+| 🪱 Garden Dirt Detectives | Soils | What soil is and does | Sand, clay, humus, layers | Erosion, compost, testing |
 | 🚗 Ontario Road Trip | Living & working in Ontario | Capitals, Great Lakes, our town | Regions, land use and jobs | Land-use choices, maps |
 | ⏳ Time Travel to Upper Canada | Communities 1780–1850 | Daily life long ago | First Nations and settlers | How communities changed |
 | 💃 Le studio de danse | Verbs, opposites, plurals | être/avoir (je, tu, il) | être/avoir/aller, all subjects | Plurals, opposites, mixed verbs |
@@ -53,6 +64,10 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 - **⭐ Stars and 📒 stickers** after every round.
 - **👗 Dress-up closet:** pick a buddy (🦄🐶🦊🦖…), a hat, an extra (🎸🍕🪱🚲…) and a background. Items unlock as her total stars grow, and the end-of-round screen announces new ones.
 - **🏆 Trophy shelf:** milestones (rounds, stars, perfect rounds, Spicy Hero, Explorer, Tricky Tamer…) and a "game crown" for earning 3 stars on all three levels of any game.
+
+## Moving to a new phone
+
+Grown-ups page (🔒) → **Backup & restore**. Copy the backup code, then on the other phone paste it under *Restore from code*. It carries both girls' stars, stickers, trophies, dress-up choices and settings. (Saved "tricky questions" are not included; they rebuild as she plays.)
 
 ## Special rounds (both girls)
 
@@ -74,6 +89,7 @@ Both can **tap any word** in a question or hint to hear just that word. This can
 | 📏 Gym Meet Measuring | Measuring length | Read the ruler (cm), cm or m? | Compare, estimate real objects | Start anywhere on the ruler, how much longer? |
 | ⏰ Mia's Busy Day | Telling time | O'clock, half past | Quarter past/to, time in words, calendar | 5 minutes, how long does it last? |
 | 📊 Ice Cream Vote | Graphs | Picture graphs | Bar graphs | How many more? How many in all? |
+| 🤖 Robot Dance Party | Coding | Pick the arrow program that reaches the star | Longer programs, tracing, find the bug | Repeat loops, harder bugs |
 
 **Science**
 

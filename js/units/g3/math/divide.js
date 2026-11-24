@@ -73,7 +73,7 @@ export default {
     return {
       mild: { kid: L('Share with pictures', 'Partage avec des images'), parent: 'Sharing up to 20 objects equally among 2–5 kids, with pictures.' },
       medium: { kid: L('Snack bags and sharing', 'Sacs de collation et partage'), parent: 'Division as sharing and as grouping, related to facts of 2, 5 and 10.' },
-      spicy: { kid: L('Division facts up to 49 ÷ 7', 'Divisions jusqu’à 49 ÷ 7'), parent: 'Division facts related to multiplication up to 7 × 7; half typed on keypad.' },
+      spicy: { kid: L('Division facts up to 100 ÷ 10', 'Divisions jusqu’à 100 ÷ 10'), parent: 'Division facts related to multiplication up to 10 × 10; half typed on keypad.' },
     };
   },
   get praise() { return L(['Fair share! 🪱', 'No fighting! 😄', 'Super sitter! 👶'], ['Partage juste! 🪱', 'Pas de chicane! 😄', 'Super gardienne! 👶']); },
@@ -89,7 +89,7 @@ export default {
       return pick([() => shareQ(Math.min(n, 5), each, mode, false), () => groupsQ(n, each, mode), () => factQ(n, each, mode)])();
     }
     const mode = i % 3 === 0 ? 'choice' : 'number';
-    const n = rand(2, 7), each = rand(2, 7);
+    const n = rand(2, 10), each = rand(2, 10);
     return pick([() => factQ(n, each, mode), () => factQ(n, each, mode), () => groupsQ(n, each, mode), () => shareQ(Math.min(n, 5), each, mode, false)])();
   },
 };

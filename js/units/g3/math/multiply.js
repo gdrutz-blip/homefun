@@ -47,18 +47,20 @@ function factQ(a, b, mode) {
       text: b === 10 || a === 10 ? L('Times 10: put a zero on the end!', 'Fois 10 : ajoute un zéro à la fin!')
         : b === 5 || a === 5 ? L('Times 5: count by fives!', 'Fois 5 : compte par bonds de 5!')
           : b === 2 || a === 2 ? L('Times 2 is a double!', 'Fois 2, c’est le double!')
+            : b === 9 || a === 9 ? L(`Times 9: do ×10, then take away one group. ${a === 9 ? b : a} × 10 − ${a === 9 ? b : a}.`, `Fois 9 : fais ×10, puis enlève un groupe. ${a === 9 ? b : a} × 10 − ${a === 9 ? b : a}.`)
+              : b === 4 || a === 4 ? L('Times 4: double, then double again!', 'Fois 4 : fais le double, puis encore le double!')
             : L(`Break it apart: ${a} × ${b} = ${a} × ${b - 1} + ${a}.`, `Sépare-le : ${a} × ${b} = ${a} × ${b - 1} + ${a}.`),
     },
   });
 }
 
 function missingQ(mode) {
-  const a = rand(2, 7), b = rand(2, 7);
+  const a = rand(2, 10), b = rand(2, 10);
   return numberQ({
     key: `mm-${a}-${b}`, badge: '🔍 Mystery treat!',
     text: L(`${F} gave out ${a * b} treats, ${a} to each puppy. How many puppies?`, `${F} a donné ${a * b} gâteries, ${a} à chaque chiot. Combien de chiots?`),
     big: `${a} × ${QBOX} = ${a * b}`, say: L(`${a} times what equals ${a * b}?`, `${a} fois combien égale ${a * b}?`),
-    answer: b, mode, max: 12, min: 1, near: [1, -1, 2],
+    answer: b, mode, max: 12, min: 1, near: [1, -1, 2, -2],
     hint: { text: L(`Count by ${a}s until you reach ${a * b}. How many jumps?`, `Compte par bonds de ${a} jusqu'à ${a * b}. Combien de bonds?`) },
   });
 }
@@ -79,7 +81,7 @@ export default {
     return {
       mild: { kid: L('Equal groups with pictures', 'Groupes égaux avec images'), parent: 'Equal groups and arrays with pictures (up to 5 × 5); ×2, ×5, ×10.' },
       medium: { kid: L('Facts of 2, 5 and 10', 'Les tables de 2, 5 et 10'), parent: 'Multiplication facts of 2, 5 and 10 (to ×10); arrays; half typed on keypad.' },
-      spicy: { kid: L('Facts up to 7 × 7 and mystery numbers', 'Tables jusqu’à 7 × 7 et nombres mystères'), parent: 'Multiplication up to 7 × 7, missing factors (related division).' },
+      spicy: { kid: L('Facts up to 10 × 10 and mystery numbers', 'Tables jusqu’à 10 × 10 et nombres mystères'), parent: 'Multiplication facts up to 10 × 10, missing factors (related division).' },
     };
   },
   get praise() { return L(['Good puppy! 🐶', 'Paw-some! 🐾', 'Woof woof! 🐕'], ['Bon chien! 🐶', 'Super! 🐾', 'Ouaf ouaf! 🐕']); },
@@ -97,7 +99,7 @@ export default {
     }
     const mode = i % 3 === 0 ? 'choice' : 'number';
     if (Math.random() < 0.25) return missingQ(mode);
-    const a = rand(2, 7), b = rand(2, 7);
+    const a = rand(2, 10), b = rand(2, 10);
     return pick([factQ, factQ, groupsQ])(a, b, mode);
   },
 };

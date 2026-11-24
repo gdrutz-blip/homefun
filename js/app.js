@@ -370,7 +370,31 @@ function grownups() {
     <section class="parent">
       <p class="note">Progress is saved on this device only. "First try" means right without a hint.</p>
       ${html}
+      <details class="parent-kid backup">
+        <summary><span>💾 Backup &amp; restore</span></summary>
+        <p class="note">To move progress to another phone: copy this code, then paste it into “Restore” on the other phone (Grown-ups page).</p>
+        <textarea id="backup-out" readonly rows="3" aria-label="Backup code"></textarea>
+        <button class="btn" id="backup-copy">Copy backup code</button>
+        <p class="note">Restore replaces everything on <b>this</b> phone with the code you paste.</p>
+        <textarea id="backup-in" rows="3" placeholder="Paste a backup code here" aria-label="Paste backup code"></textarea>
+        <button class="btn danger" id="backup-restore">Restore from code</button>
+        <p class="note" id="backup-msg" role="status"></p>
+      </details>
     </section>`;
+  const out = app.querySelector('#backup-out');
+  out.value = store.exportCode();
+  const msg = app.querySelector('#backup-msg');
+  app.querySelector('#backup-copy').addEventListener('click', async () => {
+    out.select();
+    try { await navigator.clipboard.writeText(out.value); msg.textContent = 'Copied! Paste it into a note or message to yourself.'; } catch { document.execCommand?.('copy'); msg.textContent = 'Selected — press and hold to copy.'; }
+  });
+  app.querySelector('#backup-restore').addEventListener('click', () => {
+    const code = app.querySelector('#backup-in').value;
+    if (!code.trim()) { msg.textContent = 'Paste a backup code first.'; return; }
+    if (!confirm('Replace ALL progress on this phone with this backup?')) return;
+    if (store.importCode(code)) { msg.textContent = 'Restored! Reloading…'; setTimeout(() => location.reload(), 600); }
+    else msg.textContent = 'That code did not work. Make sure you copied all of it.';
+  });
   app.querySelectorAll('[data-reset]').forEach((b) => b.addEventListener('click', () => {
     const p = profileById(b.dataset.reset);
     if (confirm(`Erase all of ${p.name}'s stars and stickers on this device?`)) { store.resetProfile(p.id); grownups(); }

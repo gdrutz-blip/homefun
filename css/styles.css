@@ -451,6 +451,19 @@ body[data-big="1"] .big-eq { font-size: 2.7rem; }
 .bottom-nav { grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .nav-btn { font-size: .78rem; }
 
+/* ---------- coding ---------- */
+body[data-theme="robot"] { --accent: #455a9e; --accent-dark: #2c3a70; --bg1: #e8ecff; --bg2: #fff3e0; }
+.codegrid { display: grid; grid-template-columns: repeat(var(--n), 52px); grid-auto-rows: 52px; gap: 3px; background: #c5cae9; padding: 4px; border-radius: 12px; border: 3px solid #7986cb; }
+.cg-cell { background: #f3f4ff; border-radius: 7px; display: grid; place-items: center; font-size: 1.9rem; line-height: 1; }
+.cg-letter { font-family: var(--display); color: var(--accent-dark); background: #fff; border: 3px dashed var(--accent); border-radius: 50%; width: 38px; height: 38px; display: grid; place-items: center; font-size: 1.3rem; }
+.steps { display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.step { display: inline-flex; flex-direction: column; align-items: center; font-size: 2rem; line-height: 1; background: #fff; border: 3px solid var(--accent); border-radius: 12px; padding: 4px 8px; }
+.step small { font-family: var(--display); font-size: .8rem; color: var(--accent-dark); }
+
+/* ---------- backup ---------- */
+.backup textarea { width: 100%; font-family: ui-monospace, monospace; font-size: .75rem; border-radius: 12px; border: 2px solid #ddd; padding: 8px; margin: 4px 0 8px; resize: vertical; }
+.backup .btn { min-height: 46px; padding: 8px 16px; font-size: 1rem; margin-bottom: 6px; }
+
 /* ---------- surprise / tricky ---------- */
 .mix-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 .mix-btn {

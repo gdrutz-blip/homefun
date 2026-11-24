@@ -1,6 +1,7 @@
 // Progress lives in this browser only (localStorage). Nothing is sent anywhere.
 // Each kid has her own profile: settings, progress and stickers.
 const KEY = 'familyReview.v2';
+const BACKUP_PREFIX = 'FAMILYREVIEW1:';
 const OLD_KEY = 'miaReview.v1'; // before profiles existed: everything belonged to Mia
 
 const BASE_SETTINGS = { autoRead: true, sound: true, slow: false, lang: 'en', tapWords: true, followAlong: true, bigText: false };
@@ -106,6 +107,35 @@ export const store = {
     p.stats = p.stats || {};
     p.stats.trickyCleared = (p.stats.trickyCleared || 0) + 1;
     save();
+  },
+
+  /** A text code with everything (both kids) so progress can move to another phone. */
+  exportCode() {
+    // Tricky questions are left out: they are big and rebuild themselves as she plays.
+    const slim = Object.fromEntries(Object.entries(data.profiles).map(([id, p]) => [id, { ...p, tricky: [] }]));
+    const bytes = new TextEncoder().encode(JSON.stringify({ v: 2, current: data.current, profiles: slim }));
+    let bin = '';
+    bytes.forEach((b) => { bin += String.fromCharCode(b); });
+    return BACKUP_PREFIX + btoa(bin);
+  },
+  /** Restore from a code made by exportCode(). Returns true on success. */
+  importCode(code) {
+    try {
+      const text = String(code).trim().replace(/\s+/g, '');
+      if (!text.startsWith(BACKUP_PREFIX)) return false;
+      const bin = atob(text.slice(BACKUP_PREFIX.length));
+      const parsed = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
+      if (!parsed || typeof parsed.profiles !== 'object') return false;
+      const profiles = {};
+      for (const [id, p] of Object.entries(parsed.profiles)) {
+        const fresh = newProfile();
+        profiles[id] = { ...fresh, ...p, settings: { ...fresh.settings, ...(p.settings || {}) },
+          progress: p.progress || {}, stickers: p.stickers || [], tricky: p.tricky || [], stats: p.stats || {} };
+      }
+      data = { current: null, profiles };
+      save();
+      return true;
+    } catch { return false; }
   },
 
   resetProfile(id) {
